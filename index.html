@@ -1,0 +1,2327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Aiko - You've Got This! </title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+    <style>
+        :root {
+            --primary: #ff9ecd;
+            --primary-light: #ffc4e1;
+            --primary-dark: #ff7eb8;
+            --secondary: #a8d8ea;
+            --secondary-light: #c5f0f7;
+            --accent: #ffd93d;
+            --accent-light: #fff0a3;
+            --bg-gradient-start: #fff5f8;
+            --bg-gradient-end: #e8f4f8;
+            --text-dark: #5a4a5a;
+            --text-light: #8a7a8a;
+            --white: #ffffff;
+            --shadow: rgba(255, 158, 205, 0.25);
+            --shadow-soft: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', 'Nunito', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Floating hearts animation */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.3;
+            animation: float-up 15s infinite ease-in;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Welcome Message Overlay */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .welcome-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .welcome-box {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px var(--shadow);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.5s ease;
+            border: 3px solid var(--primary-light);
+        }
+
+        .welcome-overlay.active .welcome-box {
+            transform: scale(1);
+        }
+
+        .welcome-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-close:hover {
+            background: var(--primary);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .welcome-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+
+        .welcome-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        /* Admin Button */
+        .admin-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--secondary);
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            background: var(--primary);
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 18px;
+            color: var(--text-light);
+        }
+
+        /* Character Section */
+        .character-section {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .character-container {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--white);
+            box-shadow: 0 15px 40px var(--shadow);
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .character-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .character-placeholder {
+            font-size: 80px;
+        }
+
+        .character-glow {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+            z-index: -1;
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* Days Container */
+        .days-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        .day-btn {
+            padding: 15px 30px;
+            border-radius: 25px;
+            border: none;
+            background: var(--white);
+            color: var(--primary-dark);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 5px 20px var(--shadow-soft);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .day-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px var(--shadow);
+            color: white;
+        }
+
+        .day-btn:hover::before {
+            opacity: 1;
+        }
+
+        .day-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        /* Message Display */
+        .message-display {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 40px var(--shadow-soft);
+            min-height: 300px;
+            display: none;
+            animation: slide-up 0.5s ease;
+        }
+
+        .message-display.active {
+            display: block;
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .message-day-badge {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .message-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .message-close:hover {
+            color: var(--primary-dark);
+        }
+
+        .message-content {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            min-height: 100px;
+        }
+
+        .message-image {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .message-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .part-indicator {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .next-btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .next-btn:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px var(--shadow);
+        }
+
+        .next-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Admin Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Password Screen */
+        .password-screen {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--primary-light);
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 16px;
+            margin: 20px 0;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .submit-btn {
+            padding: 15px 40px;
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .admin-tab {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 2px solid var(--primary-light);
+            background: var(--white);
+            color: var(--text-dark);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-tab:hover, .admin-tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--primary-light);
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: var(--primary-light);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle.active {
+            background: var(--primary);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .parts-container {
+            margin-top: 20px;
+        }
+
+        .part-item {
+            background: var(--bg-gradient-start);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid var(--primary-light);
+        }
+
+        .part-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .part-number {
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .part-remove {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .add-part-btn {
+            width: 100%;
+            padding: 15px;
+            border: 2px dashed var(--primary);
+            border-radius: 15px;
+            background: transparent;
+            color: var(--primary-dark);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-part-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .days-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .day-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--bg-gradient-start);
+            border-radius: 15px;
+            border: 2px solid var(--primary-light);
+        }
+
+        .day-info {
+            font-weight: 600;
+        }
+
+        .day-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .day-edit, .day-delete {
+            padding: 8px 15px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .day-edit {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .day-delete {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .save-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--primary-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        /* File Upload Styles */
+        .file-upload {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 2px dashed var(--primary-light);
+            border-radius: 15px;
+            background: var(--bg-gradient-start);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-text {
+            font-size: 14px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .file-upload-preview {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .file-upload-preview.active {
+            display: block;
+        }
+
+        .file-upload.has-file {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .upload-progress {
+            width: 100%;
+            height: 6px;
+            background: var(--primary-light);
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .upload-progress.active {
+            display: block;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .image-preview-container {
+            position: relative;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .remove-image-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Voice Message Player */
+        .voice-player {
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+            border-radius: 25px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 2px solid var(--primary);
+        }
+
+        .voice-play-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .voice-play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+
+        .voice-play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .voice-progress-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .voice-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .voice-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.1s linear;
+            position: relative;
+        }
+
+        .voice-progress-fill::after {
+            content: '💗';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .voice-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .voice-upload-area {
+            border: 2px dashed var(--primary-light);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .voice-upload-area:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .voice-upload-area.has-file {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+        }
+
+        .voice-upload-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .voice-upload-text {
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        .voice-preview-player {
+            margin-top: 10px;
+        }
+
+        .remove-voice-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .remove-voice-btn:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .footer-heart {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .character-container {
+                width: 180px;
+                height: 180px;
+            }
+
+            .day-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .modal {
+                padding: 20px;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <!-- Floating Hearts Background -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- Welcome Overlay -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-box">
+            <button class="welcome-close" onclick="closeWelcome()">&times;</button>
+            <div class="welcome-icon" id="welcomeIcon">🌸</div>
+            <h2 class="welcome-title" id="welcomeTitle">Hello Aiko!</h2>
+            <p class="welcome-text" id="welcomeText">Welcome to your special support space! I'm here to cheer you on every day until your exam. You've got this! 💪</p>
+        </div>
+    </div>
+
+    <!-- Admin Button -->
+    <button class="admin-btn" onclick="openAdmin()" title="Admin">⚙️</button>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <header class="header">
+            <h1>For Aiko 💕</h1>
+            <p>Your daily dose of encouragement!</p>
+        </header>
+
+        <!-- Character Section -->
+        <div class="character-section">
+            <div class="character-glow"></div>
+            <div class="character-container" id="characterContainer">
+                <span class="character-placeholder">🌟</span>
+            </div>
+        </div>
+
+        <!-- Days Container -->
+        <div class="days-container" id="daysContainer">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading your days...</p>
+            </div>
+        </div>
+
+        <!-- Message Display -->
+        <div class="message-display" id="messageDisplay">
+            <div class="message-header">
+                <span class="message-day-badge" id="messageDayBadge">Day 1</span>
+                <button class="message-close" onclick="closeMessage()">&times;</button>
+            </div>
+            <img class="message-image" id="messageImage" style="display: none;">
+            <div id="messageVoiceContainer" style="display: none;"></div>
+            <div class="message-content" id="messageContent"></div>
+            <div class="message-nav">
+                <span class="part-indicator" id="partIndicator">Part 1 of 3</span>
+                <button class="next-btn" id="nextBtn" onclick="nextPart()">
+                    Next <span>→</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Made with <span class="footer-heart">💗</span> for Aiko | You've got this!</p>
+        </footer>
+    </div>
+
+    <!-- Admin Modal -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Admin Panel</h2>
+                <button class="modal-close" onclick="closeAdmin()">&times;</button>
+            </div>
+
+            <!-- Password Screen -->
+            <div class="password-screen" id="passwordScreen">
+                <div style="font-size: 50px; margin-bottom: 20px;">🔐</div>
+                <h3>Enter Admin Password</h3>
+                <input type="password" class="password-input" id="passwordInput" placeholder="Enter password...">
+                <button class="submit-btn" onclick="checkPassword()">Enter</button>
+                <p id="passwordError" style="color: #ff6b6b; margin-top: 15px; display: none;">Incorrect password!</p>
+            </div>
+
+            <!-- Admin Panel -->
+            <div class="admin-panel" id="adminPanelContent">
+                <div class="admin-tabs">
+                    <button class="admin-tab active" onclick="switchTab('welcome')">Welcome Message</button>
+                    <button class="admin-tab" onclick="switchTab('character')">Character</button>
+                    <button class="admin-tab" onclick="switchTab('days')">Manage Days</button>
+                    <button class="admin-tab" onclick="switchTab('add')">Add/Edit Day</button>
+                </div>
+
+                <!-- Welcome Settings -->
+                <div class="admin-section active" id="tab-welcome">
+                    <div class="form-group">
+                        <label class="form-label">Welcome Icon (emoji)</label>
+                        <input type="text" class="form-input" id="welcomeIconInput" placeholder="🌸">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Welcome Title</label>
+                        <input type="text" class="form-input" id="welcomeTitleInput" placeholder="Hello Aiko!">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Welcome Message</label>
+                        <textarea class="form-textarea" id="welcomeTextInput" placeholder="Enter your welcome message..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hide Welcome Message Forever</label>
+                        <div class="toggle-container">
+                            <div class="toggle" id="hideWelcomeToggle" onclick="toggleWelcome()">
+                                <div class="toggle-slider"></div>
+                            </div>
+                            <span id="toggleStatus">Off</span>
+                        </div>
+                    </div>
+                    <button class="save-btn" onclick="saveWelcomeSettings()">Save Settings</button>
+                </div>
+
+                <!-- Character Settings -->
+                <div class="admin-section" id="tab-character">
+                    <div class="form-group">
+                        <label class="form-label">Character Image</label>
+                        <div class="file-upload" id="characterUpload">
+                            <input type="file" id="characterFileInput" accept="image/*" onchange="handleCharacterUpload(this)">
+                            <div class="file-upload-icon">📷</div>
+                            <div class="file-upload-text">Click to upload an image<br><small>or drag and drop</small></div>
+                            <img class="file-upload-preview" id="characterPreview">
+                            <div class="upload-progress" id="characterUploadProgress">
+                                <div class="upload-progress-bar" id="characterProgressBar"></div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="characterImageUrl">
+                    </div>
+                    <button class="save-btn" id="saveCharacterBtn" onclick="saveCharacter()">Save Character</button>
+                </div>
+
+                <!-- Days List -->
+                <div class="admin-section" id="tab-days">
+                    <div class="days-list" id="daysList">
+                        <div class="loading">Loading days...</div>
+                    </div>
+                </div>
+
+                <!-- Add/Edit Day -->
+                <div class="admin-section" id="tab-add">
+                    <div class="form-group">
+                        <label class="form-label">Day Number</label>
+                        <input type="number" class="form-input" id="dayNumberInput" min="1" max="15" placeholder="1-15">
+                    </div>
+                    <div class="parts-container" id="partsContainer">
+                        <!-- Parts will be added here -->
+                    </div>
+                    <button class="add-part-btn" onclick="addPart()">+ Add Message Part</button>
+                    <button class="save-btn" id="saveDayBtn" onclick="saveDay()">Save Day</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SUPABASE CONFIGURATION
+        // ============================================
+        const SUPABASE_URL = 'https://ferapozpiqskfflsbizy.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_GmR9-CM1hvtC7kxRCI_KRA_bxxv1_nl';
+        
+        let supabase;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } catch (e) {
+            console.error('Supabase init error:', e);
+        }
+
+        // ============================================
+        // STATE
+        // ============================================
+        let currentDay = null;
+        let currentPart = 0;
+        let dayData = null;
+        let allDays = [];
+        let welcomeSettings = {};
+        let editingDayId = null;
+        let partCounter = 0;
+        let uploadedFiles = {};
+
+        const ADMIN_PASSWORD = 'sorex123';
+        const STORAGE_BUCKET = 'images';
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            createFloatingHearts();
+            loadData();
+        });
+
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '🌸', '✨', '🌟'];
+            
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 15 + 's';
+                heart.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        async function loadData() {
+            try {
+                // Load welcome settings
+                const { data: welcomeData, error: welcomeError } = await supabase
+                    .from('welcome_settings')
+                    .select('*')
+                    .single();
+                
+                if (welcomeData) {
+                    welcomeSettings = welcomeData;
+                    applyWelcomeSettings();
+                }
+
+                // Load character
+                const { data: charData, error: charError } = await supabase
+                    .from('character')
+                    .select('*')
+                    .single();
+                
+                if (charData && charData.image_url) {
+                    document.getElementById('characterContainer').innerHTML = 
+                        `<img src="${charData.image_url}" alt="Character">`;
+                }
+
+                // Load days
+                await loadDays();
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showDemoMode();
+            }
+        }
+
+        function showDemoMode() {
+            document.getElementById('daysContainer').innerHTML = `
+                <button class="day-btn" onclick="showDemoDay(1)">Day 1</button>
+                <button class="day-btn" onclick="showDemoDay(2)">Day 2</button>
+                <button class="day-btn" onclick="showDemoDay(3)">Day 3</button>
+            `;
+        }
+
+        function showDemoDay(day) {
+            const demoMessages = {
+                1: {
+                    parts: [
+                        { text: "Hello Aiko! Today is the first day of you reading and using this website. I'm so proud of you for starting this journey! 🌸", image_url: null },
+                        { text: "I made this website to support you during your study time. Whenever you feel overwhelmed, just come here and remember that you have someone cheering for you! 💪", image_url: null },
+                        { text: "Make sure you open it daily for your dose of encouragement. You've got this! ✨", image_url: null }
+                    ]
+                },
+                2: {
+                    parts: [
+                        { text: "Day 2! You're doing amazing, Aiko! Keep up the great work! 🌟", image_url: null },
+                        { text: "Remember to take breaks and breathe. Your mental health is just as important as your studies. 💕", image_url: null }
+                    ]
+                },
+                3: {
+                    parts: [
+                        { text: "Day 3 already! See how fast time flies when you're focused? You're making progress every single day! 🎉", image_url: null },
+                        { text: "Believe in yourself as much as I believe in you. You're capable of amazing things! 💖", image_url: null },
+                        { text: "Keep going, Aiko! The finish line is getting closer! 🏃‍♀️✨", image_url: null }
+                    ]
+                }
+            };
+            
+            dayData = demoMessages[day];
+            currentDay = day;
+            currentPart = 0;
+            showMessage();
+        }
+
+        async function loadDays() {
+            try {
+                // Load days with their part counts using a separate query
+                const { data: daysData, error: daysError } = await supabase
+                    .from('days')
+                    .select('*')
+                    .order('day_number');
+
+                if (daysError) throw daysError;
+
+                // For each day, count the parts
+                allDays = [];
+                for (const day of (daysData || [])) {
+                    const { count, error: countError } = await supabase
+                        .from('day_parts')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('day_id', day.id);
+                    
+                    allDays.push({
+                        ...day,
+                        day_parts: new Array(count || 0)
+                    });
+                }
+
+                renderDays();
+            } catch (error) {
+                console.error('Error loading days:', error);
+                document.getElementById('daysContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <p>Error loading days. Please refresh.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderDays() {
+            const container = document.getElementById('daysContainer');
+            
+            if (allDays.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📅</div>
+                        <p>Days will appear here soon!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = allDays.map(day => `
+                <button class="day-btn" onclick="openDay(${day.id}, ${day.day_number})">
+                    Day ${day.day_number}
+                </button>
+            `).join('');
+        }
+
+        function applyWelcomeSettings() {
+            if (!welcomeSettings) return;
+            
+            if (welcomeSettings.icon) {
+                document.getElementById('welcomeIcon').textContent = welcomeSettings.icon;
+            }
+            if (welcomeSettings.title) {
+                document.getElementById('welcomeTitle').textContent = welcomeSettings.title;
+            }
+            if (welcomeSettings.message) {
+                document.getElementById('welcomeText').textContent = welcomeSettings.message;
+            }
+            
+            if (!welcomeSettings.hidden) {
+                setTimeout(() => {
+                    document.getElementById('welcomeOverlay').classList.add('active');
+                }, 500);
+            }
+        }
+
+        // ============================================
+        // FILE UPLOAD FUNCTIONS
+        // ============================================
+        async function uploadImage(file, folder) {
+            if (!file) return null;
+            
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+            const filePath = `${folder}/${fileName}`;
+
+            try {
+                const { data, error } = await supabase.storage
+                    .from(STORAGE_BUCKET)
+                    .upload(filePath, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+
+                if (error) throw error;
+
+                const { data: urlData } = supabase.storage
+                    .from(STORAGE_BUCKET)
+                    .getPublicUrl(filePath);
+
+                return urlData.publicUrl;
+            } catch (error) {
+                console.error('Upload error:', error);
+                throw error;
+            }
+        }
+
+        function handleCharacterUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const preview = document.getElementById('characterPreview');
+            const uploadArea = document.getElementById('characterUpload');
+            const progressBar = document.getElementById('characterProgressBar');
+            const progressContainer = document.getElementById('characterUploadProgress');
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.classList.add('active');
+                uploadArea.classList.add('has-file');
+            };
+            reader.readAsDataURL(file);
+
+            progressContainer.classList.add('active');
+            progressBar.style.width = '50%';
+
+            uploadImage(file, 'character')
+                .then(url => {
+                    document.getElementById('characterImageUrl').value = url;
+                    progressBar.style.width = '100%';
+                    setTimeout(() => {
+                        progressContainer.classList.remove('active');
+                        progressBar.style.width = '0%';
+                    }, 500);
+                })
+                .catch(err => {
+                    alert('Error uploading image: ' + err.message);
+                    progressContainer.classList.remove('active');
+                    progressBar.style.width = '0%';
+                });
+        }
+
+        function handlePartUpload(input, partId) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const preview = document.getElementById(`partPreview-${partId}`);
+            const uploadArea = document.getElementById(`partUpload-${partId}`);
+            const progressBar = document.getElementById(`partProgressBar-${partId}`);
+            const progressContainer = document.getElementById(`partUploadProgress-${partId}`);
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.classList.add('active');
+                uploadArea.classList.add('has-file');
+            };
+            reader.readAsDataURL(file);
+
+            progressContainer.classList.add('active');
+            progressBar.style.width = '50%';
+
+            uploadImage(file, 'day_parts')
+                .then(url => {
+                    uploadedFiles[partId] = url;
+                    document.getElementById(`partImageUrl-${partId}`).value = url;
+                    progressBar.style.width = '100%';
+                    setTimeout(() => {
+                        progressContainer.classList.remove('active');
+                        progressBar.style.width = '0%';
+                    }, 500);
+                })
+                .catch(err => {
+                    alert('Error uploading image: ' + err.message);
+                    progressContainer.classList.remove('active');
+                    progressBar.style.width = '0%';
+                });
+        }
+
+        function removePartImage(partId) {
+            const input = document.getElementById(`partFileInput-${partId}`);
+            if (input) input.value = '';
+            
+            const preview = document.getElementById(`partPreview-${partId}`);
+            if (preview) {
+                preview.src = '';
+                preview.classList.remove('active');
+            }
+            
+            const urlInput = document.getElementById(`partImageUrl-${partId}`);
+            if (urlInput) urlInput.value = '';
+            
+            const uploadArea = document.getElementById(`partUpload-${partId}`);
+            if (uploadArea) uploadArea.classList.remove('has-file');
+            
+            delete uploadedFiles[partId];
+        }
+
+        // Voice message functions
+        let uploadedVoices = {};
+        
+        async function handleVoiceUpload(input, partId) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const uploadArea = document.getElementById(`voiceUpload-${partId}`);
+            const progressBar = document.getElementById(`voiceProgressBar-${partId}`);
+            const progressContainer = document.getElementById(`voiceUploadProgress-${partId}`);
+
+            progressContainer.classList.add('active');
+            progressBar.style.width = '50%';
+
+            try {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `voice-${Date.now()}.${fileExt}`;
+                const filePath = `day_parts/${fileName}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('images')
+                    .upload(filePath, file);
+
+                if (uploadError) throw uploadError;
+
+                const { data: { publicUrl } } = supabase.storage
+                    .from('images')
+                    .getPublicUrl(filePath);
+
+                uploadedVoices[partId] = publicUrl;
+                document.getElementById(`partVoiceUrl-${partId}`).value = publicUrl;
+                
+                // Update UI with voice player
+                const previewHtml = `
+                    <div class="voice-preview-player" id="voicePreview-${partId}">
+                        <div class="voice-player">
+                            <button class="voice-play-btn" onclick="event.stopPropagation(); toggleVoicePreview(${partId})">
+                                <span id="voicePlayIcon-${partId}">▶️</span>
+                            </button>
+                            <div class="voice-progress-container">
+                                <div class="voice-progress-bar" onclick="event.stopPropagation(); seekVoicePreview(event, ${partId})">
+                                    <div class="voice-progress-fill" id="voiceProgressFill-${partId}"></div>
+                                </div>
+                                <div class="voice-time">
+                                    <span id="voiceCurrentTime-${partId}">0:00</span>
+                                    <span id="voiceDuration-${partId}">0:00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="remove-voice-btn" onclick="event.stopPropagation(); removePartVoice(${partId})">Remove Voice</button>
+                        <audio id="voiceAudio-${partId}" src="${publicUrl}" style="display: none;"></audio>
+                    </div>
+                `;
+                
+                // Remove old preview if exists
+                const oldPreview = document.getElementById(`voicePreview-${partId}`);
+                if (oldPreview) oldPreview.remove();
+                
+                // Add new preview
+                uploadArea.insertAdjacentHTML('beforeend', previewHtml);
+                uploadArea.classList.add('has-file');
+                
+                // Initialize player
+                setTimeout(() => initVoicePlayer(partId), 100);
+
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressContainer.classList.remove('active');
+                    progressBar.style.width = '0%';
+                }, 500);
+            } catch (error) {
+                alert('Error uploading voice: ' + error.message);
+                progressContainer.classList.remove('active');
+                progressBar.style.width = '0%';
+            }
+        }
+
+        function removePartVoice(partId) {
+            const input = document.getElementById(`voiceFileInput-${partId}`);
+            if (input) input.value = '';
+            
+            const urlInput = document.getElementById(`partVoiceUrl-${partId}`);
+            if (urlInput) urlInput.value = '';
+            
+            const preview = document.getElementById(`voicePreview-${partId}`);
+            if (preview) preview.remove();
+            
+            const uploadArea = document.getElementById(`voiceUpload-${partId}`);
+            if (uploadArea) uploadArea.classList.remove('has-file');
+            
+            delete uploadedVoices[partId];
+        }
+
+        function initVoicePlayer(partId) {
+            const audio = document.getElementById(`voiceAudio-${partId}`);
+            if (!audio) return;
+
+            audio.addEventListener('loadedmetadata', () => {
+                const duration = document.getElementById(`voiceDuration-${partId}`);
+                if (duration) duration.textContent = formatTime(audio.duration);
+            });
+
+            audio.addEventListener('timeupdate', () => {
+                const progressFill = document.getElementById(`voiceProgressFill-${partId}`);
+                const currentTime = document.getElementById(`voiceCurrentTime-${partId}`);
+                if (progressFill && audio.duration) {
+                    const progress = (audio.currentTime / audio.duration) * 100;
+                    progressFill.style.width = progress + '%';
+                }
+                if (currentTime) {
+                    currentTime.textContent = formatTime(audio.currentTime);
+                }
+            });
+
+            audio.addEventListener('ended', () => {
+                const playIcon = document.getElementById(`voicePlayIcon-${partId}`);
+                if (playIcon) playIcon.textContent = '▶️';
+            });
+        }
+
+        function toggleVoicePreview(partId) {
+            const audio = document.getElementById(`voiceAudio-${partId}`);
+            const playIcon = document.getElementById(`voicePlayIcon-${partId}`);
+            
+            if (!audio) return;
+
+            if (audio.paused) {
+                // Pause all other audio players
+                document.querySelectorAll('audio').forEach(a => {
+                    if (a !== audio) a.pause();
+                });
+                document.querySelectorAll('[id^="voicePlayIcon-"]').forEach(icon => {
+                    icon.textContent = '▶️';
+                });
+                
+                audio.play();
+                playIcon.textContent = '⏸️';
+            } else {
+                audio.pause();
+                playIcon.textContent = '▶️';
+            }
+        }
+
+        function seekVoicePreview(event, partId) {
+            const audio = document.getElementById(`voiceAudio-${partId}`);
+            const progressBar = event.currentTarget;
+            if (!audio || !progressBar) return;
+
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // ============================================
+        // WELCOME FUNCTIONS
+        // ============================================
+        function closeWelcome() {
+            document.getElementById('welcomeOverlay').classList.remove('active');
+        }
+
+        // ============================================
+        // DAY FUNCTIONS
+        // ============================================
+        async function openDay(id, dayNumber) {
+            try {
+                // First get the day
+                const { data: day, error: dayError } = await supabase
+                    .from('days')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (dayError) throw dayError;
+
+                // Then get the parts separately
+                const { data: parts, error: partsError } = await supabase
+                    .from('day_parts')
+                    .select('*')
+                    .eq('day_id', id)
+                    .order('part_order');
+
+                if (partsError) throw partsError;
+
+                dayData = {
+                    ...day,
+                    day_parts: parts || []
+                };
+                currentDay = dayNumber;
+                currentPart = 0;
+                
+                // Remove active class from all buttons
+                document.querySelectorAll('.day-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to the clicked button
+                const clickedBtn = document.querySelector(`.day-btn[onclick*="openDay(${id}"]`);
+                if (clickedBtn) {
+                    clickedBtn.classList.add('active');
+                }
+                
+                showMessage();
+            } catch (error) {
+                console.error('Error loading day:', error);
+                alert('Error loading day: ' + error.message);
+            }
+        }
+
+        function showMessage() {
+            if (!dayData || !dayData.day_parts || dayData.day_parts.length === 0) {
+                document.getElementById('messageContent').textContent = 'No messages for this day yet.';
+                document.getElementById('messageDisplay').classList.add('active');
+                return;
+            }
+
+            const part = dayData.day_parts[currentPart];
+            const totalParts = dayData.day_parts.length;
+
+            document.getElementById('messageDayBadge').textContent = `Day ${currentDay}`;
+            document.getElementById('messageContent').textContent = part.text;
+            document.getElementById('partIndicator').textContent = `Part ${currentPart + 1} of ${totalParts}`;
+            
+            // Handle image
+            const imgEl = document.getElementById('messageImage');
+            if (part.image_url) {
+                imgEl.src = part.image_url;
+                imgEl.style.display = 'block';
+            } else {
+                imgEl.style.display = 'none';
+            }
+
+            // Handle voice message
+            const voiceContainer = document.getElementById('messageVoiceContainer');
+            if (part.voice_url) {
+                const voiceId = 'msgVoice';
+                voiceContainer.innerHTML = `
+                    <div class="voice-player">
+                        <button class="voice-play-btn" onclick="toggleMessageVoice()">
+                            <span id="${voiceId}PlayIcon">▶️</span>
+                        </button>
+                        <div class="voice-progress-container">
+                            <div class="voice-progress-bar" onclick="seekMessageVoice(event)">
+                                <div class="voice-progress-fill" id="${voiceId}ProgressFill"></div>
+                            </div>
+                            <div class="voice-time">
+                                <span id="${voiceId}CurrentTime">0:00</span>
+                                <span id="${voiceId}Duration">0:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <audio id="${voiceId}Audio" src="${part.voice_url}" style="display: none;"></audio>
+                `;
+                voiceContainer.style.display = 'block';
+                setTimeout(() => initMessageVoicePlayer(), 100);
+            } else {
+                voiceContainer.innerHTML = '';
+                voiceContainer.style.display = 'none';
+            }
+
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentPart >= totalParts - 1) {
+                nextBtn.innerHTML = 'Finish ✨';
+                nextBtn.onclick = closeMessage;
+            } else {
+                nextBtn.innerHTML = 'Next <span>→</span>';
+                nextBtn.onclick = nextPart;
+            }
+
+            document.getElementById('messageDisplay').classList.add('active');
+            document.getElementById('messageDisplay').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function initMessageVoicePlayer() {
+            const audio = document.getElementById('msgVoiceAudio');
+            if (!audio) return;
+
+            audio.addEventListener('loadedmetadata', () => {
+                const duration = document.getElementById('msgVoiceDuration');
+                if (duration) duration.textContent = formatTime(audio.duration);
+            });
+
+            audio.addEventListener('timeupdate', () => {
+                const progressFill = document.getElementById('msgVoiceProgressFill');
+                const currentTime = document.getElementById('msgVoiceCurrentTime');
+                if (progressFill && audio.duration) {
+                    const progress = (audio.currentTime / audio.duration) * 100;
+                    progressFill.style.width = progress + '%';
+                }
+                if (currentTime) {
+                    currentTime.textContent = formatTime(audio.currentTime);
+                }
+            });
+
+            audio.addEventListener('ended', () => {
+                const playIcon = document.getElementById('msgVoicePlayIcon');
+                if (playIcon) playIcon.textContent = '▶️';
+            });
+        }
+
+        function toggleMessageVoice() {
+            const audio = document.getElementById('msgVoiceAudio');
+            const playIcon = document.getElementById('msgVoicePlayIcon');
+            
+            if (!audio) return;
+
+            if (audio.paused) {
+                audio.play();
+                playIcon.textContent = '⏸️';
+            } else {
+                audio.pause();
+                playIcon.textContent = '▶️';
+            }
+        }
+
+        function seekMessageVoice(event) {
+            const audio = document.getElementById('msgVoiceAudio');
+            const progressBar = event.currentTarget;
+            if (!audio || !progressBar) return;
+
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        }
+
+        function nextPart() {
+            if (dayData && currentPart < dayData.day_parts.length - 1) {
+                currentPart++;
+                showMessage();
+            }
+        }
+
+        function closeMessage() {
+            // Stop any playing audio
+            const audio = document.getElementById('msgVoiceAudio');
+            if (audio) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+            
+            document.getElementById('messageDisplay').classList.remove('active');
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            currentDay = null;
+            currentPart = 0;
+            dayData = null;
+        }
+
+        // ============================================
+        // ADMIN FUNCTIONS
+        // ============================================
+        function openAdmin() {
+            document.getElementById('adminModal').classList.add('active');
+            document.getElementById('passwordScreen').style.display = 'block';
+            document.getElementById('adminPanelContent').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordError').style.display = 'none';
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminModal').classList.remove('active');
+            editingDayId = null;
+            partCounter = 0;
+            uploadedFiles = {};
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            if (input === ADMIN_PASSWORD) {
+                document.getElementById('passwordScreen').style.display = 'none';
+                document.getElementById('adminPanelContent').style.display = 'block';
+                loadAdminData();
+            } else {
+                document.getElementById('passwordError').style.display = 'block';
+            }
+        }
+
+        async function loadAdminData() {
+            if (welcomeSettings) {
+                document.getElementById('welcomeIconInput').value = welcomeSettings.icon || '';
+                document.getElementById('welcomeTitleInput').value = welcomeSettings.title || '';
+                document.getElementById('welcomeTextInput').value = welcomeSettings.message || '';
+                
+                if (welcomeSettings.hidden) {
+                    document.getElementById('hideWelcomeToggle').classList.add('active');
+                    document.getElementById('toggleStatus').textContent = 'On';
+                }
+            }
+
+            try {
+                const { data } = await supabase.from('character').select('*').single();
+                if (data && data.image_url) {
+                    document.getElementById('characterImageUrl').value = data.image_url;
+                    document.getElementById('characterPreview').src = data.image_url;
+                    document.getElementById('characterPreview').classList.add('active');
+                    document.getElementById('characterUpload').classList.add('has-file');
+                }
+            } catch (e) {}
+
+            renderDaysList();
+
+            editingDayId = null;
+            document.getElementById('dayNumberInput').value = '';
+            document.getElementById('partsContainer').innerHTML = '';
+            partCounter = 0;
+            uploadedFiles = {};
+            addPart();
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            
+            // Find and activate the clicked tab
+            const clickedTab = document.querySelector(`.admin-tab[onclick*="switchTab('${tab}')"]`);
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+            }
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+
+        function toggleWelcome() {
+            const toggle = document.getElementById('hideWelcomeToggle');
+            const status = document.getElementById('toggleStatus');
+            toggle.classList.toggle('active');
+            status.textContent = toggle.classList.contains('active') ? 'On' : 'Off';
+        }
+
+        // ============================================
+        // ADMIN - WELCOME SETTINGS
+        // ============================================
+        async function saveWelcomeSettings() {
+            const settings = {
+                icon: document.getElementById('welcomeIconInput').value || '🌸',
+                title: document.getElementById('welcomeTitleInput').value || 'Hello Aiko!',
+                message: document.getElementById('welcomeTextInput').value || 'Welcome!',
+                hidden: document.getElementById('hideWelcomeToggle').classList.contains('active')
+            };
+
+            try {
+                const { error } = await supabase
+                    .from('welcome_settings')
+                    .upsert({ id: 1, ...settings });
+
+                if (error) throw error;
+
+                welcomeSettings = settings;
+                applyWelcomeSettings();
+                alert('Welcome settings saved! ✅');
+            } catch (error) {
+                console.error('Error saving welcome settings:', error);
+                alert('Error saving: ' + error.message);
+            }
+        }
+
+        // ============================================
+        // ADMIN - CHARACTER
+        // ============================================
+        async function saveCharacter() {
+            const imageUrl = document.getElementById('characterImageUrl').value;
+
+            try {
+                const { error } = await supabase
+                    .from('character')
+                    .upsert({ id: 1, image_url: imageUrl });
+
+                if (error) throw error;
+
+                if (imageUrl) {
+                    document.getElementById('characterContainer').innerHTML = 
+                        `<img src="${imageUrl}" alt="Character">`;
+                } else {
+                    document.getElementById('characterContainer').innerHTML = 
+                        `<span class="character-placeholder">🌟</span>`;
+                }
+                alert('Character saved! ✅');
+            } catch (error) {
+                console.error('Error saving character:', error);
+                alert('Error saving: ' + error.message);
+            }
+        }
+
+        // ============================================
+        // ADMIN - DAYS LIST
+        // ============================================
+        function renderDaysList() {
+            const container = document.getElementById('daysList');
+            
+            if (allDays.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light);">No days created yet.</p>';
+                return;
+            }
+
+            container.innerHTML = allDays.map(day => `
+                <div class="day-item">
+                    <span class="day-info">Day ${day.day_number} - ${day.day_parts?.length || 0} parts</span>
+                    <div class="day-actions">
+                        <button class="day-edit" onclick="editDay(${day.id})">Edit</button>
+                        <button class="day-delete" onclick="deleteDay(${day.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function editDay(id) {
+            try {
+                // Get day
+                const { data: day, error: dayError } = await supabase
+                    .from('days')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (dayError) throw dayError;
+
+                // Get parts
+                const { data: parts, error: partsError } = await supabase
+                    .from('day_parts')
+                    .select('*')
+                    .eq('day_id', id)
+                    .order('part_order');
+
+                if (partsError) throw partsError;
+
+                editingDayId = id;
+                document.getElementById('dayNumberInput').value = day.day_number;
+                
+                const container = document.getElementById('partsContainer');
+                container.innerHTML = '';
+                partCounter = 0;
+                uploadedFiles = {};
+                uploadedVoices = {};
+
+                if (parts && parts.length > 0) {
+                    parts.forEach(part => {
+                        addPart(part.text, part.image_url, part.voice_url);
+                    });
+                } else {
+                    addPart();
+                }
+
+                switchTab('add');
+            } catch (error) {
+                console.error('Error loading day for edit:', error);
+                alert('Error loading day: ' + error.message);
+            }
+        }
+
+        async function deleteDay(id) {
+            if (!confirm('Are you sure you want to delete this day?')) return;
+
+            try {
+                await supabase.from('day_parts').delete().eq('day_id', id);
+                await supabase.from('days').delete().eq('id', id);
+                
+                await loadDays();
+                renderDaysList();
+                alert('Day deleted! ✅');
+            } catch (error) {
+                console.error('Error deleting day:', error);
+                alert('Error deleting: ' + error.message);
+            }
+        }
+
+        // ============================================
+        // ADMIN - ADD/EDIT DAY
+        // ============================================
+        function addPart(text = '', imageUrl = '', voiceUrl = '') {
+            partCounter++;
+            const partId = partCounter;
+            const container = document.getElementById('partsContainer');
+            
+            const partDiv = document.createElement('div');
+            partDiv.className = 'part-item';
+            partDiv.id = `part-${partId}`;
+            partDiv.innerHTML = `
+                <div class="part-header">
+                    <span class="part-number">Part ${partId}</span>
+                    <button class="part-remove" onclick="removePart(${partId})">Remove</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Message Text</label>
+                    <textarea class="form-textarea part-text" placeholder="Enter your message...">${text}</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Image (optional)</label>
+                    <div class="file-upload ${imageUrl ? 'has-file' : ''}" id="partUpload-${partId}">
+                        <input type="file" id="partFileInput-${partId}" accept="image/*" onchange="handlePartUpload(this, ${partId})">
+                        <div class="file-upload-icon">📷</div>
+                        <div class="file-upload-text">Click to upload an image<br><small>or drag and drop</small></div>
+                        <div class="image-preview-container">
+                            <img class="file-upload-preview ${imageUrl ? 'active' : ''}" id="partPreview-${partId}" src="${imageUrl || ''}">
+                            ${imageUrl ? `<button type="button" class="remove-image-btn" onclick="removePartImage(${partId})">&times;</button>` : ''}
+                        </div>
+                        <div class="upload-progress" id="partUploadProgress-${partId}">
+                            <div class="upload-progress-bar" id="partProgressBar-${partId}"></div>
+                        </div>
+                    </div>
+                    <input type="hidden" class="part-image-url" id="partImageUrl-${partId}" value="${imageUrl || ''}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Voice Message (optional)</label>
+                    <div class="voice-upload-area ${voiceUrl ? 'has-file' : ''}" id="voiceUpload-${partId}" onclick="document.getElementById('voiceFileInput-${partId}').click()">
+                        <input type="file" id="voiceFileInput-${partId}" accept="audio/*" onchange="handleVoiceUpload(this, ${partId})" style="display: none;">
+                        <div class="voice-upload-icon">🎤</div>
+                        <div class="voice-upload-text">Click to upload a voice message<br><small>MP3, WAV, M4A, etc.</small></div>
+                        ${voiceUrl ? `
+                            <div class="voice-preview-player" id="voicePreview-${partId}">
+                                <div class="voice-player">
+                                    <button class="voice-play-btn" onclick="event.stopPropagation(); toggleVoicePreview(${partId})">
+                                        <span id="voicePlayIcon-${partId}">▶️</span>
+                                    </button>
+                                    <div class="voice-progress-container">
+                                        <div class="voice-progress-bar" onclick="event.stopPropagation(); seekVoicePreview(event, ${partId})">
+                                            <div class="voice-progress-fill" id="voiceProgressFill-${partId}"></div>
+                                        </div>
+                                        <div class="voice-time">
+                                            <span id="voiceCurrentTime-${partId}">0:00</span>
+                                            <span id="voiceDuration-${partId}">0:00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="remove-voice-btn" onclick="event.stopPropagation(); removePartVoice(${partId})">Remove Voice</button>
+                                <audio id="voiceAudio-${partId}" src="${voiceUrl}" style="display: none;"></audio>
+                            </div>
+                        ` : ''}
+                        <div class="upload-progress" id="voiceUploadProgress-${partId}">
+                            <div class="upload-progress-bar" id="voiceProgressBar-${partId}"></div>
+                        </div>
+                    </div>
+                    <input type="hidden" class="part-voice-url" id="partVoiceUrl-${partId}" value="${voiceUrl || ''}">
+                </div>
+            `;
+            
+            container.appendChild(partDiv);
+            
+            // Initialize audio if voice URL exists
+            if (voiceUrl) {
+                setTimeout(() => initVoicePlayer(partId), 100);
+            }
+        }
+
+        function removePart(id) {
+            const part = document.getElementById(`part-${id}`);
+            if (part) {
+                part.remove();
+                delete uploadedFiles[id];
+                const parts = document.querySelectorAll('.part-item');
+                parts.forEach((p, index) => {
+                    p.querySelector('.part-number').textContent = `Part ${index + 1}`;
+                });
+                partCounter = parts.length;
+            }
+        }
+
+        async function saveDay() {
+            const dayNumber = parseInt(document.getElementById('dayNumberInput').value);
+            if (!dayNumber || dayNumber < 1 || dayNumber > 15) {
+                alert('Please enter a valid day number (1-15)');
+                return;
+            }
+
+            const btn = document.getElementById('saveDayBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            try {
+                // Collect parts
+                const parts = [];
+                document.querySelectorAll('.part-item').forEach((partEl, index) => {
+                    const text = partEl.querySelector('.part-text').value.trim();
+                    const imageUrl = partEl.querySelector('.part-image-url').value.trim();
+                    const voiceUrl = partEl.querySelector('.part-voice-url').value.trim();
+                    if (text) {
+                        parts.push({ 
+                            text, 
+                            image_url: imageUrl || null,
+                            voice_url: voiceUrl || null,
+                            part_order: index 
+                        });
+                    }
+                });
+
+                if (parts.length === 0) {
+                    alert('Please add at least one message part');
+                    btn.disabled = false;
+                    btn.textContent = 'Save Day';
+                    return;
+                }
+
+                let dayId = editingDayId;
+
+                if (editingDayId) {
+                    // Update existing day
+                    const { error: updateError } = await supabase
+                        .from('days')
+                        .update({ day_number: dayNumber })
+                        .eq('id', editingDayId);
+                    
+                    if (updateError) throw updateError;
+                    
+                    // Delete old parts
+                    const { error: deleteError } = await supabase
+                        .from('day_parts')
+                        .delete()
+                        .eq('day_id', editingDayId);
+                    
+                    if (deleteError) throw deleteError;
+                } else {
+                    // Check if day number already exists
+                    const existing = allDays.find(d => d.day_number === dayNumber);
+                    if (existing) {
+                        alert(`Day ${dayNumber} already exists! Please edit it instead.`);
+                        btn.disabled = false;
+                        btn.textContent = 'Save Day';
+                        return;
+                    }
+
+                    // Create new day
+                    const { data, error: insertError } = await supabase
+                        .from('days')
+                        .insert({ day_number: dayNumber })
+                        .select()
+                        .single();
+                    
+                    if (insertError) throw insertError;
+                    dayId = data.id;
+                }
+
+                // Insert parts
+                const partsToInsert = parts.map(p => ({
+                    day_id: dayId,
+                    text: p.text,
+                    image_url: p.image_url,
+                    voice_url: p.voice_url,
+                    part_order: p.part_order
+                }));
+
+                const { error: partsError } = await supabase
+                    .from('day_parts')
+                    .insert(partsToInsert);
+
+                if (partsError) throw partsError;
+
+                // Reload
+                await loadDays();
+                renderDaysList();
+                
+                // Reset form
+                editingDayId = null;
+                document.getElementById('dayNumberInput').value = '';
+                document.getElementById('partsContainer').innerHTML = '';
+                partCounter = 0;
+                uploadedFiles = {};
+                addPart();
+
+                alert(`Day ${dayNumber} saved! ✅`);
+                switchTab('days');
+
+            } catch (error) {
+                console.error('Error saving day:', error);
+                alert('Error saving: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Day';
+            }
+        }
+
+        // Close modal on outside click
+        document.getElementById('adminModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('adminModal')) {
+                closeAdmin();
+            }
+        });
+
+        // Enter key on password
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkPassword();
+        });
+    </script>
+</body>
+</html>

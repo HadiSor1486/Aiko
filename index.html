@@ -184,6 +184,112 @@
             background: var(--primary);
         }
 
+        /* Gift Button */
+        .gift-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 217, 61, 0.4);
+            animation: giftPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes giftPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(255, 217, 61, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(255, 217, 61, 0.6);
+            }
+        }
+
+        .gift-btn:hover {
+            opacity: 1;
+            transform: scale(1.15);
+            animation: none;
+        }
+
+        /* Gift Video Overlay */
+        .gift-video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .gift-video-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+
+        .gift-video-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--accent);
+            box-shadow: 0 0 50px rgba(255, 217, 61, 0.8);
+            transform: scale(0);
+            animation: giftVideoEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes giftVideoEnter {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .gift-video-container.exit {
+            animation: giftVideoExit 0.5s ease-in forwards;
+        }
+
+        @keyframes giftVideoExit {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0) rotate(180deg);
+                opacity: 0;
+            }
+        }
+
+        .gift-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         /* Main Container */
         .main-container {
             position: relative;
@@ -262,14 +368,176 @@
             50% { transform: scale(1.1); opacity: 0.8; }
         }
 
-        /* Days Container */
-        .days-container {
+        /* Progress Section */
+        .progress-section {
+            width: 100%;
+            max-width: 800px;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 15px var(--shadow-soft);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+            transition: width 0.5s ease;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            max-width: 600px;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .progress-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        /* Days Container - Scrollable Grid */
+        .days-container {
+            width: 100%;
+            max-width: 900px;
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
             margin-bottom: 30px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-light) transparent;
+        }
+
+        .days-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .days-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .days-container::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        .days-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        /* Day Card */
+        .day-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-soft);
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .day-card:hover::before {
+            opacity: 0.15;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .day-card.unlocked {
+            background: linear-gradient(135deg, rgba(255, 158, 205, 0.1), rgba(168, 216, 234, 0.1));
+            border-color: var(--primary-light);
+        }
+
+        .day-card.unlocked:hover {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(255, 158, 205, 0.15), rgba(168, 216, 234, 0.15));
+        }
+
+        .day-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .day-card.locked:hover {
+            transform: none;
+            box-shadow: 0 4px 15px var(--shadow-soft);
+        }
+
+        .day-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .day-number {
+            font-size: 42px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .day-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .day-status {
+            font-size: 28px;
+        }
+
+        .day-card.locked .day-number,
+        .day-card.locked .day-label {
+            opacity: 0.5;
         }
 
         .day-btn {
@@ -318,30 +586,57 @@
 
         /* Message Display */
         .message-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
             background: var(--white);
             border-radius: 25px;
             padding: 30px;
             max-width: 600px;
-            width: 100%;
-            box-shadow: 0 10px 40px var(--shadow-soft);
-            min-height: 300px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             display: none;
-            animation: slide-up 0.5s ease;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .message-display.active {
             display: block;
+            animation: smoothFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        @keyframes slide-up {
-            from {
+        @keyframes smoothFadeIn {
+            0% {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translate(-50%, -50%) scale(0.95);
             }
-            to {
+            100% {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translate(-50%, -50%) scale(1);
             }
+        }
+
+        .message-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0px);
+            display: none;
+            z-index: 999;
+            transition: all 0.4s ease;
+        }
+
+        .message-overlay.active {
+            display: block;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
         }
 
         .message-header {
@@ -1037,7 +1332,7 @@
         }
 
         /* Responsive */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .header h1 {
                 font-size: 32px;
             }
@@ -1047,13 +1342,80 @@
                 height: 180px;
             }
 
+            .days-container {
+                max-height: 400px;
+                padding: 15px;
+            }
+
+            .days-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+
+            .day-card {
+                padding: 20px;
+            }
+
+            .day-number {
+                font-size: 36px;
+            }
+
+            .day-label {
+                font-size: 14px;
+            }
+
+            .day-status {
+                font-size: 24px;
+            }
+
+            .progress-section {
+                padding: 20px;
+            }
+
+            .progress-title {
+                font-size: 16px;
+            }
+
             .day-btn {
                 padding: 12px 20px;
                 font-size: 14px;
             }
 
+            .message-display {
+                width: 95%;
+                padding: 20px;
+                max-height: 80vh;
+            }
+
+            .message-content {
+                font-size: 16px;
+            }
+
+            .gift-video-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .gift-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+
             .modal {
                 padding: 20px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .days-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .days-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
         }
     </style>
@@ -1076,6 +1438,16 @@
     <!-- Admin Button -->
     <button class="admin-btn" onclick="openAdmin()" title="Admin">⚙️</button>
 
+    <!-- Gift Button -->
+    <button class="gift-btn" onclick="playGiftVideo()" title="Special Gift" id="giftBtn" style="display: none;">🎁</button>
+
+    <!-- Gift Video Overlay -->
+    <div class="gift-video-overlay" id="giftVideoOverlay" onclick="closeGiftVideo()">
+        <div class="gift-video-container" id="giftVideoContainer" onclick="event.stopPropagation()">
+            <video class="gift-video" id="giftVideo" playsinline></video>
+        </div>
+    </div>
+
     <!-- Main Container -->
     <div class="main-container">
         <header class="header">
@@ -1091,6 +1463,15 @@
             </div>
         </div>
 
+        <!-- Progress Section -->
+        <div class="progress-section" id="progressSection" style="display: none;">
+            <div class="progress-title">Your Progress</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBar">0%</div>
+            </div>
+            <div class="progress-text" id="progressText">0 of 0 days completed</div>
+        </div>
+
         <!-- Days Container -->
         <div class="days-container" id="daysContainer">
             <div class="loading">
@@ -1098,6 +1479,9 @@
                 <p>Loading your days...</p>
             </div>
         </div>
+
+        <!-- Message Overlay -->
+        <div class="message-overlay" id="messageOverlay" onclick="closeMessage()"></div>
 
         <!-- Message Display -->
         <div class="message-display" id="messageDisplay">
@@ -1141,14 +1525,48 @@
             <!-- Admin Panel -->
             <div class="admin-panel" id="adminPanelContent">
                 <div class="admin-tabs">
-                    <button class="admin-tab active" onclick="switchTab('welcome')">Welcome Message</button>
+                    <button class="admin-tab active" onclick="switchTab('settings')">⚙️ Settings</button>
+                    <button class="admin-tab" onclick="switchTab('welcome')">Welcome Message</button>
                     <button class="admin-tab" onclick="switchTab('character')">Character</button>
                     <button class="admin-tab" onclick="switchTab('days')">Manage Days</button>
                     <button class="admin-tab" onclick="switchTab('add')">Add/Edit Day</button>
                 </div>
 
+                <!-- Settings -->
+                <div class="admin-section active" id="tab-settings">
+                    <div class="form-group">
+                        <label class="form-label">Total Number of Days</label>
+                        <input type="number" class="form-input" id="totalDaysInput" min="1" placeholder="Enter total days (e.g., 15, 30, 50)">
+                        <p style="color: #8a7a8a; font-size: 14px; margin-top: 8px;">
+                            💡 This controls how many days Aiko needs to complete before seeing the congratulations message.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Gift Video (Special Surprise) 🎁</label>
+                        <div class="file-upload" id="giftVideoUpload">
+                            <input type="file" id="giftVideoFileInput" accept="video/*" onchange="handleGiftVideoUpload(this)">
+                            <div class="file-upload-icon">🎬</div>
+                            <div class="file-upload-text">Click to upload a video<br><small>MP4, MOV, WEBM, etc.</small></div>
+                            <div class="video-preview-container" id="giftVideoPreviewContainer" style="display: none;">
+                                <video class="file-upload-preview" id="giftVideoPreview" style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover;" controls></video>
+                                <button type="button" class="remove-image-btn" onclick="removeGiftVideo()">&times;</button>
+                            </div>
+                            <div class="upload-progress" id="giftVideoUploadProgress">
+                                <div class="upload-progress-bar" id="giftVideoProgressBar"></div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="giftVideoUrl">
+                        <p style="color: #8a7a8a; font-size: 14px; margin-top: 8px;">
+                            🎁 Upload a special video that will appear when Aiko clicks the gift button!
+                        </p>
+                    </div>
+
+                    <button class="save-btn" onclick="saveSettings()">Save Settings</button>
+                </div>
+
                 <!-- Welcome Settings -->
-                <div class="admin-section active" id="tab-welcome">
+                <div class="admin-section" id="tab-welcome">
                     <div class="form-group">
                         <label class="form-label">Welcome Icon (emoji)</label>
                         <input type="text" class="form-input" id="welcomeIconInput" placeholder="🌸">
@@ -1202,7 +1620,7 @@
                 <div class="admin-section" id="tab-add">
                     <div class="form-group">
                         <label class="form-label">Day Number</label>
-                        <input type="number" class="form-input" id="dayNumberInput" min="1" max="15" placeholder="1-15">
+                        <input type="number" class="form-input" id="dayNumberInput" min="1" placeholder="Enter day number">
                     </div>
                     <div class="parts-container" id="partsContainer">
                         <!-- Parts will be added here -->
@@ -1239,6 +1657,7 @@
         let editingDayId = null;
         let partCounter = 0;
         let uploadedFiles = {};
+        let totalDays = 15; // Default value, will be loaded from database
 
         const ADMIN_PASSWORD = 'sorex123';
         const STORAGE_BUCKET = 'images';
@@ -1268,6 +1687,12 @@
 
         async function loadData() {
             try {
+                // Load settings
+                await loadSettings();
+                
+                // Load gift video
+                await loadGiftVideo();
+
                 // Load welcome settings
                 const { data: welcomeData, error: welcomeError } = await supabase
                     .from('welcome_settings')
@@ -1297,6 +1722,262 @@
                 console.error('Error loading data:', error);
                 showDemoMode();
             }
+        }
+
+        // Load Settings from Database
+        async function loadSettings() {
+            try {
+                const { data, error } = await supabase
+                    .from('settings')
+                    .select('*')
+                    .eq('key', 'total_days')
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Error loading settings:', error.message, error);
+                    throw error;
+                }
+
+                if (data && data.value) {
+                    totalDays = parseInt(data.value);
+                    console.log('Total days loaded:', totalDays);
+                } else {
+                    // Create default setting if it doesn't exist
+                    console.log('No total_days setting found, creating default...');
+                    const { error: insertError } = await supabase
+                        .from('settings')
+                        .insert({ key: 'total_days', value: '15' });
+                    
+                    if (insertError) {
+                        console.error('Error creating default setting:', insertError.message);
+                    }
+                    totalDays = 15;
+                }
+            } catch (error) {
+                console.error('Error loading settings:', error.message || error);
+                totalDays = 15; // Fallback to default
+            }
+        }
+
+        // Save Settings to Database
+        async function saveSettings() {
+            const newTotalDays = parseInt(document.getElementById('totalDaysInput').value);
+            const giftVideoUrl = document.getElementById('giftVideoUrl').value;
+            
+            let settingsSaved = false;
+
+            try {
+                // Save total days if provided and valid
+                if (newTotalDays && newTotalDays >= 1) {
+                    const { error: daysError } = await supabase
+                        .from('settings')
+                        .upsert({ key: 'total_days', value: newTotalDays.toString() }, { onConflict: 'key' });
+
+                    if (daysError) {
+                        console.error('Error saving total days:', daysError);
+                        throw new Error('Failed to save total days: ' + daysError.message);
+                    }
+
+                    totalDays = newTotalDays;
+                    settingsSaved = true;
+                }
+
+                // Save gift video URL if provided (independent of totalDays)
+                if (giftVideoUrl) {
+                    const { error: videoError } = await supabase
+                        .from('settings')
+                        .upsert({ key: 'gift_video_url', value: giftVideoUrl }, { onConflict: 'key' });
+
+                    if (videoError) {
+                        console.error('Error saving gift video:', videoError);
+                        throw new Error('Failed to save gift video: ' + videoError.message);
+                    }
+                    
+                    settingsSaved = true;
+                }
+
+                if (settingsSaved) {
+                    await loadGiftVideo(); // Reload gift video
+                    alert(`Settings saved successfully! ✅`);
+                } else {
+                    alert('Please enter total days or upload a gift video');
+                }
+                
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                alert('Error saving settings: ' + error.message);
+            }
+        }
+
+        // Load gift video from database
+        async function loadGiftVideo() {
+            try {
+                console.log('Loading gift video...');
+                const { data, error } = await supabase
+                    .from('settings')
+                    .select('*')
+                    .eq('key', 'gift_video_url')
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Error loading gift video:', error.message, error);
+                }
+
+                console.log('Gift video data:', data);
+
+                if (data && data.value) {
+                    console.log('Gift video URL found:', data.value);
+                    document.getElementById('giftVideoUrl').value = data.value;
+                    const giftBtn = document.getElementById('giftBtn');
+                    console.log('Gift button element:', giftBtn);
+                    if (giftBtn) {
+                        giftBtn.style.display = 'flex'; // Show gift button
+                        console.log('Gift button displayed');
+                    }
+                    
+                    // Update preview if in admin
+                    loadGiftVideoPreview();
+                } else {
+                    console.log('No gift video found, hiding button');
+                    const giftBtn = document.getElementById('giftBtn');
+                    if (giftBtn) {
+                        giftBtn.style.display = 'none'; // Hide gift button
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading gift video:', error.message || error);
+                const giftBtn = document.getElementById('giftBtn');
+                if (giftBtn) {
+                    giftBtn.style.display = 'none';
+                }
+            }
+        }
+
+        // Play gift video
+        function playGiftVideo() {
+            const videoUrl = document.getElementById('giftVideoUrl').value;
+            console.log('Gift video URL:', videoUrl);
+            
+            if (!videoUrl) {
+                console.error('No gift video URL found');
+                return;
+            }
+
+            const overlay = document.getElementById('giftVideoOverlay');
+            const container = document.getElementById('giftVideoContainer');
+            const video = document.getElementById('giftVideo');
+
+            video.src = videoUrl;
+            overlay.classList.add('active');
+            container.classList.remove('exit');
+
+            // Play video with error handling
+            const playPromise = video.play();
+            
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log('Video playing successfully');
+                    })
+                    .catch(error => {
+                        console.error('Autoplay error:', error);
+                        // On mobile, sometimes autoplay is blocked, but video will play after user clicked button
+                    });
+            }
+
+            // When video ends, close with animation
+            video.onended = () => {
+                container.classList.add('exit');
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                    video.pause();
+                    video.currentTime = 0;
+                }, 500);
+            };
+        }
+
+        // Close gift video manually
+        function closeGiftVideo() {
+            const overlay = document.getElementById('giftVideoOverlay');
+            const container = document.getElementById('giftVideoContainer');
+            const video = document.getElementById('giftVideo');
+
+            container.classList.add('exit');
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                video.pause();
+                video.currentTime = 0;
+            }, 500);
+        }
+
+        // Handle gift video upload
+        async function handleGiftVideoUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            console.log('Uploading gift video:', file.name, 'Size:', file.size);
+
+            const uploadArea = document.getElementById('giftVideoUpload');
+            const preview = document.getElementById('giftVideoPreview');
+            const previewContainer = document.getElementById('giftVideoPreviewContainer');
+            const progress = document.getElementById('giftVideoUploadProgress');
+            const progressBar = document.getElementById('giftVideoProgressBar');
+
+            try {
+                progress.classList.add('active');
+                progressBar.style.width = '0%';
+
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+                const filePath = `videos/${fileName}`;
+
+                console.log('Uploading to:', STORAGE_BUCKET, '/', filePath);
+
+                const { data, error } = await supabase.storage
+                    .from(STORAGE_BUCKET)
+                    .upload(filePath, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+
+                if (error) {
+                    console.error('Upload error details:', error.message, error);
+                    throw new Error(error.message);
+                }
+
+                console.log('Upload successful:', data);
+
+                const { data: urlData } = supabase.storage
+                    .from(STORAGE_BUCKET)
+                    .getPublicUrl(filePath);
+
+                const publicUrl = urlData.publicUrl;
+                console.log('Public URL:', publicUrl);
+
+                document.getElementById('giftVideoUrl').value = publicUrl;
+                preview.src = publicUrl;
+                previewContainer.style.display = 'block';
+                uploadArea.classList.add('has-file');
+
+                progressBar.style.width = '100%';
+                
+                alert('Video uploaded successfully! Remember to click "Save Settings" to save it.');
+
+            } catch (error) {
+                console.error('Upload error:', error.message || error);
+                alert('Error uploading video: ' + (error.message || 'Unknown error. Check console for details.'));
+            } finally {
+                setTimeout(() => progress.classList.remove('active'), 500);
+            }
+        }
+
+        // Remove gift video
+        function removeGiftVideo() {
+            document.getElementById('giftVideoUrl').value = '';
+            document.getElementById('giftVideoPreview').src = '';
+            document.getElementById('giftVideoPreviewContainer').style.display = 'none';
+            document.getElementById('giftVideoUpload').classList.remove('has-file');
+            document.getElementById('giftVideoFileInput').value = '';
         }
 
         function showDemoMode() {
@@ -1345,7 +2026,10 @@
                     .select('*')
                     .order('day_number');
 
-                if (daysError) throw daysError;
+                if (daysError) {
+                    console.error('Error loading days:', daysError.message, daysError);
+                    throw daysError;
+                }
 
                 // For each day, count the parts
                 allDays = [];
@@ -1355,15 +2039,20 @@
                         .select('*', { count: 'exact', head: true })
                         .eq('day_id', day.id);
                     
+                    if (countError) {
+                        console.error('Error counting parts for day', day.day_number, ':', countError.message);
+                    }
+                    
                     allDays.push({
                         ...day,
                         day_parts: new Array(count || 0)
                     });
                 }
 
+                console.log('Loaded', allDays.length, 'days');
                 renderDays();
             } catch (error) {
-                console.error('Error loading days:', error);
+                console.error('Error loading days:', error.message || error);
                 document.getElementById('daysContainer').innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">⚠️</div>
@@ -1375,22 +2064,51 @@
 
         function renderDays() {
             const container = document.getElementById('daysContainer');
+            const progressSection = document.getElementById('progressSection');
             
-            if (allDays.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📅</div>
-                        <p>Days will appear here soon!</p>
+            // Show progress section
+            progressSection.style.display = 'block';
+            updateProgress();
+            
+            // Create grid for all days up to totalDays
+            const grid = document.createElement('div');
+            grid.className = 'days-grid';
+            
+            for (let i = 1; i <= totalDays; i++) {
+                const dayData = allDays.find(d => d.day_number === i);
+                const isUnlocked = dayData !== undefined; // Day is unlocked if it exists in database
+                
+                const card = document.createElement('div');
+                card.className = `day-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+                
+                if (isUnlocked) {
+                    card.onclick = () => openDay(dayData.id, dayData.day_number);
+                }
+                
+                card.innerHTML = `
+                    <div class="day-content">
+                        <div class="day-number">${i}</div>
+                        <div class="day-label">Day ${i}</div>
+                        <div class="day-status">
+                            ${isUnlocked ? '✨' : '🔒'}
+                        </div>
                     </div>
                 `;
-                return;
+                
+                grid.appendChild(card);
             }
+            
+            container.innerHTML = '';
+            container.appendChild(grid);
+        }
 
-            container.innerHTML = allDays.map(day => `
-                <button class="day-btn" onclick="openDay(${day.id}, ${day.day_number})">
-                    Day ${day.day_number}
-                </button>
-            `).join('');
+        function updateProgress() {
+            const createdDays = allDays.length; // Count how many days exist in database
+            const percentage = totalDays > 0 ? Math.round((createdDays / totalDays) * 100) : 0;
+
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+            document.getElementById('progressText').textContent = `${createdDays} of ${totalDays} days created`;
         }
 
         function applyWelcomeSettings() {
@@ -1754,6 +2472,7 @@
         function showMessage() {
             if (!dayData || !dayData.day_parts || dayData.day_parts.length === 0) {
                 document.getElementById('messageContent').textContent = 'No messages for this day yet.';
+                document.getElementById('messageOverlay').classList.add('active');
                 document.getElementById('messageDisplay').classList.add('active');
                 return;
             }
@@ -1804,15 +2523,15 @@
 
             const nextBtn = document.getElementById('nextBtn');
             if (currentPart >= totalParts - 1) {
-                nextBtn.innerHTML = 'Finish ✨';
+                nextBtn.innerHTML = 'Close ✨';
                 nextBtn.onclick = closeMessage;
             } else {
                 nextBtn.innerHTML = 'Next <span>→</span>';
                 nextBtn.onclick = nextPart;
             }
 
+            document.getElementById('messageOverlay').classList.add('active');
             document.getElementById('messageDisplay').classList.add('active');
-            document.getElementById('messageDisplay').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         function initMessageVoicePlayer() {
@@ -1882,6 +2601,7 @@
                 audio.currentTime = 0;
             }
             
+            document.getElementById('messageOverlay').classList.remove('active');
             document.getElementById('messageDisplay').classList.remove('active');
             document.querySelectorAll('.day-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -1890,6 +2610,7 @@
             currentPart = 0;
             dayData = null;
         }
+
 
         // ============================================
         // ADMIN FUNCTIONS
@@ -1962,6 +2683,25 @@
                 clickedTab.classList.add('active');
             }
             document.getElementById(`tab-${tab}`).classList.add('active');
+            
+            // Load data for specific tabs
+            if (tab === 'settings') {
+                document.getElementById('totalDaysInput').value = totalDays;
+                loadGiftVideoPreview();
+            }
+        }
+
+        function loadGiftVideoPreview() {
+            const giftVideoUrl = document.getElementById('giftVideoUrl').value;
+            const preview = document.getElementById('giftVideoPreview');
+            const previewContainer = document.getElementById('giftVideoPreviewContainer');
+            const uploadArea = document.getElementById('giftVideoUpload');
+            
+            if (giftVideoUrl && preview && previewContainer) {
+                preview.src = giftVideoUrl;
+                previewContainer.style.display = 'block';
+                uploadArea.classList.add('has-file');
+            }
         }
 
         function toggleWelcome() {
@@ -2200,8 +2940,8 @@
 
         async function saveDay() {
             const dayNumber = parseInt(document.getElementById('dayNumberInput').value);
-            if (!dayNumber || dayNumber < 1 || dayNumber > 15) {
-                alert('Please enter a valid day number (1-15)');
+            if (!dayNumber || dayNumber < 1) {
+                alert('Please enter a valid day number (minimum 1)');
                 return;
             }
 
@@ -2324,4 +3064,4 @@
         });
     </script>
 </body>
-</html>
+    </html>

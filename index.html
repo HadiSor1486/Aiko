@@ -290,6 +290,32 @@
             object-fit: cover;
         }
 
+        .gift-play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .gift-play-button:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .gift-play-button.show {
+            display: flex;
+        }
+
         /* Main Container */
         .main-container {
             position: relative;
@@ -1444,7 +1470,10 @@
     <!-- Gift Video Overlay -->
     <div class="gift-video-overlay" id="giftVideoOverlay" onclick="closeGiftVideo()">
         <div class="gift-video-container" id="giftVideoContainer" onclick="event.stopPropagation()">
-            <video class="gift-video" id="giftVideo" playsinline></video>
+            <video class="gift-video" id="giftVideo" playsinline muted></video>
+            <div class="gift-play-button" id="giftPlayButton" onclick="manualPlayGiftVideo()">
+                <span style="font-size: 60px;">▶️</span>
+            </div>
         </div>
     </div>
 
@@ -1866,24 +1895,26 @@
             const overlay = document.getElementById('giftVideoOverlay');
             const container = document.getElementById('giftVideoContainer');
             const video = document.getElementById('giftVideo');
+            const playButton = document.getElementById('giftPlayButton');
 
+            // Reset video
             video.src = videoUrl;
+            video.muted = false; // Unmute for sound
+            video.load(); // Load the video
+            
             overlay.classList.add('active');
             container.classList.remove('exit');
+            playButton.classList.remove('show');
 
-            // Play video with error handling
-            const playPromise = video.play();
-            
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => {
-                        console.log('Video playing successfully');
-                    })
-                    .catch(error => {
-                        console.error('Autoplay error:', error);
-                        // On mobile, sometimes autoplay is blocked, but video will play after user clicked button
-                    });
-            }
+            // Try to play video
+            video.play().then(() => {
+                console.log('Video playing successfully with sound');
+                playButton.classList.remove('show');
+            }).catch(error => {
+                console.log('Autoplay blocked (normal on iOS), showing play button:', error.message);
+                // Show manual play button for iOS
+                playButton.classList.add('show');
+            });
 
             // When video ends, close with animation
             video.onended = () => {
@@ -1892,8 +1923,29 @@
                     overlay.classList.remove('active');
                     video.pause();
                     video.currentTime = 0;
+                    playButton.classList.remove('show');
                 }, 500);
             };
+
+            // Hide play button once video starts playing
+            video.onplay = () => {
+                playButton.classList.remove('show');
+            };
+        }
+
+        // Manual play for iOS
+        function manualPlayGiftVideo() {
+            const video = document.getElementById('giftVideo');
+            const playButton = document.getElementById('giftPlayButton');
+            
+            video.muted = false; // Ensure unmuted
+            video.play().then(() => {
+                console.log('Manual play successful');
+                playButton.classList.remove('show');
+            }).catch(error => {
+                console.error('Manual play failed:', error);
+                alert('Could not play video. Please try again.');
+            });
         }
 
         // Close gift video manually
@@ -1901,12 +1953,14 @@
             const overlay = document.getElementById('giftVideoOverlay');
             const container = document.getElementById('giftVideoContainer');
             const video = document.getElementById('giftVideo');
+            const playButton = document.getElementById('giftPlayButton');
 
             container.classList.add('exit');
             setTimeout(() => {
                 overlay.classList.remove('active');
                 video.pause();
                 video.currentTime = 0;
+                playButton.classList.remove('show');
             }, 500);
         }
 

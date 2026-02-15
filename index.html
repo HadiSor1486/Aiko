@@ -682,6 +682,207 @@
             font-size: 14px;
         }
 
+        .progress-toggle-btn {
+            margin-left: 10px;
+            padding: 8px 15px;
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            background: var(--accent-light);
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .progress-toggle-btn:hover {
+            background: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .progress-toggle-btn.active {
+            background: var(--accent);
+            box-shadow: 0 0 15px rgba(255, 217, 61, 0.5);
+        }
+
+        /* Sticky Note Container */
+        .sticky-note-container {
+            display: none;
+        }
+
+        .sticky-note-container.active {
+            display: block;
+        }
+
+        .sticky-note {
+            background: linear-gradient(135deg, #fffacd 0%, #ffeaa7 100%);
+            border-radius: 3px;
+            padding: 30px 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            position: relative;
+            font-family: 'Quicksand', cursive;
+            min-height: 300px;
+            border-top: 50px solid #f9ca24;
+        }
+
+        .sticky-note::before {
+            content: '📌';
+            position: absolute;
+            top: -40px;
+            right: 20px;
+            font-size: 30px;
+            transform: rotate(15deg);
+        }
+
+        .sticky-note-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e17055;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .sticky-note-subtitle {
+            font-size: 14px;
+            color: #636e72;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .sticky-note-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: none;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 16px;
+            line-height: 1.8;
+            resize: vertical;
+            color: var(--text-dark);
+        }
+
+        .sticky-note-textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .sticky-note-textarea::placeholder {
+            color: #b2bec3;
+        }
+
+        .sticky-note-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .sticky-note-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .sticky-note-save {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+        }
+
+        .sticky-note-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+        }
+
+        .sticky-note-cancel {
+            background: #dfe6e9;
+            color: var(--text-dark);
+        }
+
+        .sticky-note-cancel:hover {
+            background: #b2bec3;
+        }
+
+        /* Progress view */
+        .progress-note-view {
+            display: none;
+        }
+
+        .progress-note-view.active {
+            display: block;
+        }
+
+        .progress-note-content {
+            background: linear-gradient(135deg, #fffacd 0%, #ffeaa7 100%);
+            border-radius: 3px;
+            padding: 30px 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            position: relative;
+            font-family: 'Quicksand', cursive;
+            min-height: 200px;
+            border-top: 50px solid #f9ca24;
+            white-space: pre-wrap;
+            line-height: 1.8;
+            font-size: 16px;
+            color: var(--text-dark);
+        }
+
+        .progress-note-content::before {
+            content: '📌';
+            position: absolute;
+            top: -40px;
+            right: 20px;
+            font-size: 30px;
+            transform: rotate(15deg);
+        }
+
+        .progress-note-edit-btn {
+            margin-top: 15px;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #ffa500, #ff8c00);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-note-edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 165, 0, 0.4);
+        }
+
+        /* Progress indicator on day cards */
+        .day-progress-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .message-parts-container {
+            display: block;
+        }
+
+        .message-parts-container.hidden {
+            display: none;
+        }
+
         .message-close {
             margin-left: auto;
             background: none;
@@ -1516,16 +1717,50 @@
         <div class="message-display" id="messageDisplay">
             <div class="message-header">
                 <span class="message-day-badge" id="messageDayBadge">Day 1</span>
+                <button class="progress-toggle-btn" id="progressToggleBtn" onclick="toggleProgress()">📝 Add Progress</button>
                 <button class="message-close" onclick="closeMessage()">&times;</button>
             </div>
-            <img class="message-image" id="messageImage" style="display: none;">
-            <div id="messageVoiceContainer" style="display: none;"></div>
-            <div class="message-content" id="messageContent"></div>
-            <div class="message-nav">
-                <span class="part-indicator" id="partIndicator">Part 1 of 3</span>
-                <button class="next-btn" id="nextBtn" onclick="nextPart()">
-                    Next <span>→</span>
-                </button>
+            
+            <!-- Message Parts Container -->
+            <div class="message-parts-container" id="messagePartsContainer">
+                <img class="message-image" id="messageImage" style="display: none;">
+                <div id="messageVoiceContainer" style="display: none;"></div>
+                <div class="message-content" id="messageContent"></div>
+                <div class="message-nav">
+                    <span class="part-indicator" id="partIndicator">Part 1 of 3</span>
+                    <button class="next-btn" id="nextBtn" onclick="nextPart()">
+                        Next <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sticky Note Container (for editing) -->
+            <div class="sticky-note-container" id="stickyNoteContainer">
+                <div class="sticky-note">
+                    <div class="sticky-note-title">✨ Today's Progress ✨</div>
+                    <div class="sticky-note-subtitle">What did you study? What did you accomplish?</div>
+                    <textarea 
+                        class="sticky-note-textarea" 
+                        id="progressTextarea" 
+                        placeholder="✏️ Write down what you studied today...
+
+📚 Topics covered:
+
+✅ What you accomplished:
+
+💪 How you feel:"
+                    ></textarea>
+                    <div class="sticky-note-buttons">
+                        <button class="sticky-note-btn sticky-note-save" onclick="saveProgress()">💾 Save</button>
+                        <button class="sticky-note-btn sticky-note-cancel" onclick="cancelProgress()">❌ Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Note View (for reading) -->
+            <div class="progress-note-view" id="progressNoteView">
+                <div class="progress-note-content" id="progressNoteContent"></div>
+                <button class="progress-note-edit-btn" onclick="editProgress()">✏️ Edit Progress</button>
             </div>
         </div>
 
@@ -1679,6 +1914,7 @@
         // STATE
         // ============================================
         let currentDay = null;
+        let currentDayNumber = null;
         let currentPart = 0;
         let dayData = null;
         let allDays = [];
@@ -1687,6 +1923,8 @@
         let partCounter = 0;
         let uploadedFiles = {};
         let totalDays = 15; // Default value, will be loaded from database
+        let currentProgressNote = null;
+        let dayProgressNotes = new Map(); // Store progress notes for days
 
         const ADMIN_PASSWORD = 'sorex123';
         const STORAGE_BUCKET = 'images';
@@ -1746,6 +1984,9 @@
 
                 // Load days
                 await loadDays();
+                
+                // Load all progress notes
+                await loadAllProgressNotes();
 
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -2131,6 +2372,7 @@
             for (let i = 1; i <= totalDays; i++) {
                 const dayData = allDays.find(d => d.day_number === i);
                 const isUnlocked = dayData !== undefined; // Day is unlocked if it exists in database
+                const hasProgress = dayProgressNotes.has(i);
                 
                 const card = document.createElement('div');
                 card.className = `day-card ${isUnlocked ? 'unlocked' : 'locked'}`;
@@ -2141,6 +2383,7 @@
                 
                 card.innerHTML = `
                     <div class="day-content">
+                        ${hasProgress ? '<div class="day-progress-indicator">📝</div>' : ''}
                         <div class="day-number">${i}</div>
                         <div class="day-label">Day ${i}</div>
                         <div class="day-status">
@@ -2503,7 +2746,11 @@
                     day_parts: parts || []
                 };
                 currentDay = dayNumber;
+                currentDayNumber = dayNumber;
                 currentPart = 0;
+                
+                // Load progress note for this day
+                await loadProgressNote(dayNumber);
                 
                 // Remove active class from all buttons
                 document.querySelectorAll('.day-btn').forEach(btn => {
@@ -2515,6 +2762,12 @@
                 if (clickedBtn) {
                     clickedBtn.classList.add('active');
                 }
+                
+                // Reset views
+                document.getElementById('messagePartsContainer').classList.remove('hidden');
+                document.getElementById('stickyNoteContainer').classList.remove('active');
+                document.getElementById('progressNoteView').classList.remove('active');
+                document.getElementById('progressToggleBtn').classList.remove('active');
                 
                 showMessage();
             } catch (error) {
@@ -2660,9 +2913,169 @@
             document.querySelectorAll('.day-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
+            
+            // Reset progress view
+            document.getElementById('messagePartsContainer').classList.remove('hidden');
+            document.getElementById('stickyNoteContainer').classList.remove('active');
+            document.getElementById('progressNoteView').classList.remove('active');
+            document.getElementById('progressToggleBtn').classList.remove('active');
+            
             currentDay = null;
+            currentDayNumber = null;
             currentPart = 0;
             dayData = null;
+            currentProgressNote = null;
+        }
+
+        // ============================================
+        // PROGRESS NOTE FUNCTIONS
+        // ============================================
+        async function toggleProgress() {
+            const partsContainer = document.getElementById('messagePartsContainer');
+            const stickyNoteContainer = document.getElementById('stickyNoteContainer');
+            const progressNoteView = document.getElementById('progressNoteView');
+            const toggleBtn = document.getElementById('progressToggleBtn');
+            
+            // If showing message parts, switch to progress
+            if (!partsContainer.classList.contains('hidden')) {
+                // Check if progress note exists
+                if (currentProgressNote) {
+                    // Show existing progress note
+                    document.getElementById('progressNoteContent').textContent = currentProgressNote;
+                    partsContainer.classList.add('hidden');
+                    progressNoteView.classList.add('active');
+                    toggleBtn.classList.add('active');
+                    toggleBtn.innerHTML = '💌 View Message';
+                } else {
+                    // Show sticky note editor for new progress
+                    partsContainer.classList.add('hidden');
+                    stickyNoteContainer.classList.add('active');
+                    document.getElementById('progressTextarea').value = '';
+                    toggleBtn.innerHTML = '💌 View Message';
+                }
+            } else {
+                // Switch back to message parts
+                partsContainer.classList.remove('hidden');
+                stickyNoteContainer.classList.remove('active');
+                progressNoteView.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                
+                if (currentProgressNote) {
+                    toggleBtn.innerHTML = '📝 View Progress';
+                } else {
+                    toggleBtn.innerHTML = '📝 Add Progress';
+                }
+            }
+        }
+
+        async function saveProgress() {
+            const progressText = document.getElementById('progressTextarea').value.trim();
+            
+            if (!progressText) {
+                alert('Please write something before saving! 📝');
+                return;
+            }
+            
+            if (!currentDayNumber) {
+                alert('Error: No day selected');
+                return;
+            }
+
+            try {
+                // Save to database
+                const { error } = await supabase
+                    .from('progress_notes')
+                    .upsert({
+                        day_number: currentDayNumber,
+                        note: progressText,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'day_number' });
+
+                if (error) throw error;
+
+                currentProgressNote = progressText;
+                dayProgressNotes.set(currentDayNumber, progressText);
+                
+                // Update UI
+                document.getElementById('stickyNoteContainer').classList.remove('active');
+                document.getElementById('progressNoteContent').textContent = progressText;
+                document.getElementById('progressNoteView').classList.add('active');
+                document.getElementById('progressToggleBtn').innerHTML = '💌 View Message';
+                document.getElementById('progressToggleBtn').classList.add('active');
+                
+                // Update day card indicator
+                await renderDays();
+                
+                alert('Progress saved! ✨ Keep up the great work, Aiko! 💪');
+            } catch (error) {
+                console.error('Error saving progress:', error);
+                alert('Error saving progress: ' + error.message);
+            }
+        }
+
+        function cancelProgress() {
+            document.getElementById('stickyNoteContainer').classList.remove('active');
+            document.getElementById('messagePartsContainer').classList.remove('hidden');
+            document.getElementById('progressToggleBtn').classList.remove('active');
+            
+            if (currentProgressNote) {
+                document.getElementById('progressToggleBtn').innerHTML = '📝 View Progress';
+            } else {
+                document.getElementById('progressToggleBtn').innerHTML = '📝 Add Progress';
+            }
+        }
+
+        function editProgress() {
+            document.getElementById('progressNoteView').classList.remove('active');
+            document.getElementById('stickyNoteContainer').classList.add('active');
+            document.getElementById('progressTextarea').value = currentProgressNote || '';
+        }
+
+        async function loadProgressNote(dayNumber) {
+            try {
+                const { data, error } = await supabase
+                    .from('progress_notes')
+                    .select('*')
+                    .eq('day_number', dayNumber)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Error loading progress note:', error);
+                }
+
+                if (data && data.note) {
+                    currentProgressNote = data.note;
+                    dayProgressNotes.set(dayNumber, data.note);
+                    document.getElementById('progressToggleBtn').innerHTML = '📝 View Progress';
+                    return true;
+                } else {
+                    currentProgressNote = null;
+                    document.getElementById('progressToggleBtn').innerHTML = '📝 Add Progress';
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error loading progress note:', error);
+                return false;
+            }
+        }
+
+        async function loadAllProgressNotes() {
+            try {
+                const { data, error } = await supabase
+                    .from('progress_notes')
+                    .select('*');
+
+                if (error) throw error;
+
+                dayProgressNotes.clear();
+                if (data) {
+                    data.forEach(note => {
+                        dayProgressNotes.set(note.day_number, note.note);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading all progress notes:', error);
+            }
         }
 
 
@@ -3118,4 +3531,4 @@
         });
     </script>
 </body>
-    </html>
+                                                               </html>

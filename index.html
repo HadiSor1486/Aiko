@@ -2665,6 +2665,119 @@ Example:
         }
 
         // ============================================
+        // THEME AUTOMATION (Independent from admin panel)
+        // ============================================
+        let automationSettings = {
+            enabled: false,
+            nightTime: '19:00',
+            defaultTime: '06:00'
+        };
+
+        // Load automation settings from database
+        async function loadAutomationSettings() {
+            try {
+                const { data, error } = await supabase
+                    .from('theme_automation')
+                    .select('*')
+                    .eq('id', 1)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Error loading automation settings:', error);
+                    return;
+                }
+
+                if (data) {
+                    automationSettings = {
+                        enabled: data.enabled || false,
+                        nightTime: data.night_time || '19:00',
+                        defaultTime: data.default_time || '06:00'
+                    };
+                    console.log('Automation settings loaded:', automationSettings);
+                }
+            } catch (error) {
+                console.error('Error loading automation settings:', error);
+            }
+        }
+
+        // Determine which theme should be active based on Lebanon time
+        function getAutomatedTheme() {
+            const now = new Date();
+            // Get current time in Lebanon (Asia/Beirut)
+            const lebanonTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Beirut' }));
+            const currentMinutes = lebanonTime.getHours() * 60 + lebanonTime.getMinutes();
+
+            const [nightH, nightM] = automationSettings.nightTime.split(':').map(Number);
+            const [defaultH, defaultM] = automationSettings.defaultTime.split(':').map(Number);
+            const nightMinutes = nightH * 60 + nightM;
+            const defaultMinutes = defaultH * 60 + defaultM;
+
+            // Handle schedule that crosses midnight (e.g., night=19:00, default=06:00)
+            if (nightMinutes > defaultMinutes) {
+                // Night is active from nightMinutes to midnight AND midnight to defaultMinutes
+                if (currentMinutes >= nightMinutes || currentMinutes < defaultMinutes) {
+                    return 'night';
+                }
+                return 'default';
+            } else {
+                // Night is active from nightMinutes to defaultMinutes (same day)
+                if (currentMinutes >= nightMinutes && currentMinutes < defaultMinutes) {
+                    return 'night';
+                }
+                return 'default';
+            }
+        }
+
+        // Apply the correct theme based on automation settings
+        async function applyAutomatedTheme() {
+            if (!automationSettings.enabled) {
+                // If automation is off, just load the theme from database
+                await loadThemeFromDB();
+                return;
+            }
+
+            const correctTheme = getAutomatedTheme();
+            applyTheme(correctTheme);
+            console.log('Automated theme applied:', correctTheme, '- Lebanon time check');
+        }
+
+        // Load theme from database (fallback when automation is off)
+        async function loadThemeFromDB() {
+            try {
+                const { data, error } = await supabase
+                    .from('themes')
+                    .select('theme_name')
+                    .eq('id', 1)
+                    .single();
+
+                if (data && data.theme_name) {
+                    applyTheme(data.theme_name);
+                }
+            } catch (error) {
+                console.error('Error loading theme from DB:', error);
+            }
+        }
+
+        // Start periodic theme checking
+        function startThemeAutomation() {
+            // Check theme every 60 seconds
+            setInterval(async () => {
+                if (automationSettings.enabled) {
+                    const correctTheme = getAutomatedTheme();
+                    const isCurrentlyNight = document.body.classList.contains('theme-night');
+                    const currentTheme = isCurrentlyNight ? 'night' : 'default';
+
+                    if (correctTheme !== currentTheme) {
+                        console.log(`Auto-switching theme: ${currentTheme} -> ${correctTheme}`);
+                        applyTheme(correctTheme);
+                    }
+                }
+            }, 60000);
+
+            console.log('Theme automation started - checking every 60 seconds');
+        }
+
+        // ============================================
         // FIREWORKS ANIMATION
         // ============================================
         
@@ -2878,7 +2991,9 @@ Example:
         async function loadData() {
             try {
                 await loadSettings();
-                await loadTheme();
+                await loadAutomationSettings();
+                await applyAutomatedTheme();
+                startThemeAutomation();
                 await loadGiftVideo();
                 await loadDuaas();
 

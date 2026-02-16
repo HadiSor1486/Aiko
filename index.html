@@ -224,6 +224,390 @@
             animation: none;
         }
 
+        /* To-Do List Button */
+        .todo-btn {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+            animation: todoPulse 2s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes todoPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(108, 92, 231, 0.6);
+            }
+        }
+
+        .todo-btn:hover {
+            opacity: 1;
+            transform: scale(1.15);
+            animation: none;
+        }
+
+        /* To-Do Modal */
+        .todo-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: none;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .todo-modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+
+        .todo-modal {
+            background: linear-gradient(135deg, #ffeef8, #fff5f7);
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .todo-modal-overlay.active .todo-modal {
+            transform: scale(1);
+        }
+
+        .todo-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 15px;
+        }
+
+        .todo-modal-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .todo-modal-close {
+            background: none;
+            border: none;
+            font-size: 30px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .todo-modal-close:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        /* GPA Display */
+        .gpa-container {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .gpa-circle {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 15px;
+        }
+
+        .gpa-circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .gpa-circle-bg {
+            fill: none;
+            stroke: #f0f0f0;
+            stroke-width: 12;
+        }
+
+        .gpa-circle-progress {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease, stroke 0.5s ease;
+        }
+
+        .gpa-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .gpa-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .gpa-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .gpa-stat {
+            text-align: center;
+        }
+
+        .gpa-stat-value {
+            font-weight: 700;
+            font-size: 20px;
+            display: block;
+        }
+
+        .gpa-stat-label {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        /* To-Do Input Area */
+        .todo-input-container {
+            margin-bottom: 25px;
+        }
+
+        .todo-date-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .todo-input-area {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .todo-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 3px solid var(--primary-light);
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 16px;
+            line-height: 2;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .todo-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .todo-textarea::placeholder {
+            color: #b2bec3;
+        }
+
+        .todo-hint {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .todo-submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .todo-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        /* To-Do List Display */
+        .todo-list-container {
+            margin-bottom: 20px;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .todo-item:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateX(5px);
+        }
+
+        .todo-item.completed {
+            opacity: 0.6;
+        }
+
+        .todo-item.completed .todo-item-text {
+            text-decoration: line-through;
+            color: var(--text-light);
+        }
+
+        .todo-checkbox {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        /* RTL Support */
+        .todo-item[dir="rtl"] .todo-checkbox {
+            margin-right: 0;
+            margin-left: 15px;
+        }
+
+        .todo-item-text {
+            flex: 1;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--text-dark);
+        }
+
+        .todo-item-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            margin-right: 10px;
+            color: var(--primary-dark);
+        }
+
+        .todo-item[dir="rtl"] .todo-item-number {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        /* Action Buttons */
+        .todo-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .todo-action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .todo-new-btn {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+        }
+
+        .todo-new-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+        }
+
+        .todo-edit-btn {
+            background: linear-gradient(135deg, #ffa500, #ff8c00);
+            color: white;
+        }
+
+        .todo-edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 165, 0, 0.4);
+        }
+
+        .todo-empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .todo-empty-state-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        /* Edit Mode */
+        .todo-edit-area {
+            display: none;
+        }
+
+        .todo-edit-area.active {
+            display: block;
+        }
+
+        .todo-view-area {
+            display: block;
+        }
+
+        .todo-view-area.hidden {
+            display: none;
+        }
+
         /* Gift Video Overlay */
         .gift-video-overlay {
             position: fixed;
@@ -873,6 +1257,28 @@
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+            to {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
         }
 
         .message-parts-container {
@@ -1629,6 +2035,40 @@
                 font-size: 20px;
             }
 
+            .todo-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+                top: 75px;
+            }
+
+            .todo-modal {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .todo-modal-title {
+                font-size: 22px;
+            }
+
+            .gpa-circle {
+                width: 120px;
+                height: 120px;
+            }
+
+            .gpa-circle svg {
+                width: 120px;
+                height: 120px;
+            }
+
+            .gpa-text {
+                font-size: 28px;
+            }
+
+            .todo-actions {
+                flex-direction: column;
+            }
+
             .modal {
                 padding: 20px;
             }
@@ -1667,6 +2107,82 @@
 
     <!-- Gift Button -->
     <button class="gift-btn" onclick="playGiftVideo()" title="Special Gift" id="giftBtn" style="display: none;">🎁</button>
+
+    <!-- To-Do List Button -->
+    <button class="todo-btn" onclick="openTodoModal()" title="To-Do List & GPA">✅</button>
+
+    <!-- To-Do Modal -->
+    <div class="todo-modal-overlay" id="todoModalOverlay" onclick="closeTodoModal()">
+        <div class="todo-modal" onclick="event.stopPropagation()">
+            <div class="todo-modal-header">
+                <h2 class="todo-modal-title">📚 Study Tracker & GPA</h2>
+                <button class="todo-modal-close" onclick="closeTodoModal()">&times;</button>
+            </div>
+
+            <!-- GPA Display -->
+            <div class="gpa-container" id="gpaContainer">
+                <div class="gpa-label">Your Study GPA</div>
+                <div class="gpa-circle">
+                    <svg width="150" height="150">
+                        <circle class="gpa-circle-bg" cx="75" cy="75" r="65"></circle>
+                        <circle class="gpa-circle-progress" id="gpaCircle" cx="75" cy="75" r="65" 
+                                stroke-dasharray="408.4" stroke-dashoffset="408.4"></circle>
+                    </svg>
+                    <div class="gpa-text" id="gpaText">0.0</div>
+                </div>
+                <div class="gpa-stats">
+                    <div class="gpa-stat">
+                        <span class="gpa-stat-value" id="totalTasks">0</span>
+                        <span class="gpa-stat-label">Total Tasks</span>
+                    </div>
+                    <div class="gpa-stat">
+                        <span class="gpa-stat-value" id="completedTasks" style="color: #00b894;">0</span>
+                        <span class="gpa-stat-label">Completed</span>
+                    </div>
+                    <div class="gpa-stat">
+                        <span class="gpa-stat-value" id="incompleteTasks" style="color: #ff7675;">0</span>
+                        <span class="gpa-stat-label">Remaining</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area (for new/edit) -->
+            <div class="todo-input-container todo-edit-area" id="todoEditArea">
+                <div class="todo-date-label" id="todoDateLabel">Today's Study Goals</div>
+                <div class="todo-input-area">
+                    <textarea 
+                        class="todo-textarea" 
+                        id="todoTextarea" 
+                        placeholder="Write each task on a new line... ✏️
+
+Example:
+- Review Chapter 5
+- Practice 20 problems
+- Memorize vocabulary
+- Watch lecture video"
+                    ></textarea>
+                    <div class="todo-hint">💡 Write each task on a new line. Works in English & Arabic!</div>
+                </div>
+                <button class="todo-submit-btn" onclick="submitTodoList()">✨ Save To-Do List</button>
+            </div>
+
+            <!-- View Area (for viewing/checking) -->
+            <div class="todo-view-area" id="todoViewArea">
+                <div class="todo-date-label" id="todoViewDateLabel"></div>
+                <div class="todo-list-container" id="todoListContainer">
+                    <div class="todo-empty-state">
+                        <div class="todo-empty-state-icon">📝</div>
+                        <p>No to-do list yet!</p>
+                        <p style="font-size: 14px;">Create your first study plan above ✨</p>
+                    </div>
+                </div>
+                <div class="todo-actions">
+                    <button class="todo-action-btn todo-edit-btn" onclick="editTodoList()">✏️ Edit List</button>
+                    <button class="todo-action-btn todo-new-btn" onclick="startNewTodoList()">🎯 New Day</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Gift Video Overlay -->
     <div class="gift-video-overlay" id="giftVideoOverlay" onclick="closeGiftVideo()">
@@ -1925,6 +2441,8 @@
         let totalDays = 15; // Default value, will be loaded from database
         let currentProgressNote = null;
         let dayProgressNotes = new Map(); // Store progress notes for days
+        let currentTodoList = null; // Current to-do list
+        let allTodoLists = []; // All to-do lists for GPA calculation
 
         const ADMIN_PASSWORD = 'sorex123';
         const STORAGE_BUCKET = 'images';
@@ -1987,6 +2505,9 @@
                 
                 // Load all progress notes
                 await loadAllProgressNotes();
+                
+                // Load all todos for GPA
+                await loadAllTodos();
 
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -3080,6 +3601,330 @@
 
 
         // ============================================
+        // TO-DO LIST & GPA FUNCTIONS
+        // ============================================
+        
+        function openTodoModal() {
+            document.getElementById('todoModalOverlay').classList.add('active');
+            loadCurrentTodoList();
+            calculateGPA();
+        }
+
+        function closeTodoModal() {
+            document.getElementById('todoModalOverlay').classList.remove('active');
+        }
+
+        async function loadCurrentTodoList() {
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                
+                const { data, error } = await supabase
+                    .from('daily_todos')
+                    .select('*, todo_items(*)')
+                    .eq('date', today)
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Error loading todo list:', error);
+                }
+
+                if (data) {
+                    currentTodoList = data;
+                    displayTodoList();
+                } else {
+                    currentTodoList = null;
+                    showEditMode();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                currentTodoList = null;
+                showEditMode();
+            }
+        }
+
+        function showEditMode() {
+            document.getElementById('todoEditArea').classList.add('active');
+            document.getElementById('todoViewArea').classList.add('hidden');
+            document.getElementById('todoTextarea').value = '';
+            updateDateLabel();
+        }
+
+        function showViewMode() {
+            document.getElementById('todoEditArea').classList.remove('active');
+            document.getElementById('todoViewArea').classList.remove('hidden');
+        }
+
+        function updateDateLabel() {
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStr = today.toLocaleDateString('en-US', options);
+            document.getElementById('todoDateLabel').textContent = dateStr;
+            document.getElementById('todoViewDateLabel').textContent = dateStr;
+        }
+
+        async function submitTodoList() {
+            const textarea = document.getElementById('todoTextarea');
+            const text = textarea.value.trim();
+            
+            if (!text) {
+                alert('Please write at least one task! 📝');
+                return;
+            }
+
+            const tasks = text.split('\n').filter(line => line.trim());
+            
+            if (tasks.length === 0) {
+                alert('Please write at least one task! 📝');
+                return;
+            }
+
+            try {
+                const today = new Date().toISOString().split('T')[0];
+
+                // If editing existing list, delete old one first
+                if (currentTodoList) {
+                    await supabase.from('daily_todos').delete().eq('id', currentTodoList.id);
+                }
+
+                // Create new todo list
+                const { data: todoList, error: listError } = await supabase
+                    .from('daily_todos')
+                    .insert({
+                        date: today,
+                        total_tasks: tasks.length
+                    })
+                    .select()
+                    .single();
+
+                if (listError) throw listError;
+
+                // Insert all tasks
+                const todoItems = tasks.map((task, index) => ({
+                    todo_list_id: todoList.id,
+                    task_text: task.trim(),
+                    task_order: index + 1,
+                    completed: false
+                }));
+
+                const { error: itemsError } = await supabase
+                    .from('todo_items')
+                    .insert(todoItems);
+
+                if (itemsError) throw itemsError;
+
+                alert('To-do list saved! ✅ You got this, Aiko! 💪');
+                await loadCurrentTodoList();
+                await calculateGPA();
+                
+            } catch (error) {
+                console.error('Error saving todo list:', error);
+                alert('Error saving list: ' + error.message);
+            }
+        }
+
+        function displayTodoList() {
+            if (!currentTodoList || !currentTodoList.todo_items || currentTodoList.todo_items.length === 0) {
+                document.getElementById('todoListContainer').innerHTML = `
+                    <div class="todo-empty-state">
+                        <div class="todo-empty-state-icon">📝</div>
+                        <p>No tasks for today!</p>
+                    </div>
+                `;
+                showViewMode();
+                return;
+            }
+
+            const items = currentTodoList.todo_items.sort((a, b) => a.task_order - b.task_order);
+            
+            // Detect if text is RTL (Arabic, Hebrew, etc.)
+            const isRTL = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(items[0].task_text);
+            
+            const html = items.map((item, index) => `
+                <div class="todo-item ${item.completed ? 'completed' : ''}" dir="${isRTL ? 'rtl' : 'ltr'}">
+                    <div class="todo-item-number">${index + 1}</div>
+                    <input 
+                        type="checkbox" 
+                        class="todo-checkbox" 
+                        ${item.completed ? 'checked' : ''}
+                        onchange="toggleTodoItem(${item.id}, this.checked)"
+                    >
+                    <span class="todo-item-text">${item.task_text}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('todoListContainer').innerHTML = html;
+            showViewMode();
+            updateDateLabel();
+        }
+
+        async function toggleTodoItem(itemId, completed) {
+            try {
+                const { error } = await supabase
+                    .from('todo_items')
+                    .update({ completed: completed })
+                    .eq('id', itemId);
+
+                if (error) throw error;
+
+                // Reload to update display
+                await loadCurrentTodoList();
+                await calculateGPA();
+
+                if (completed) {
+                    // Show encouragement
+                    const encouragements = [
+                        "Great job! ✨",
+                        "You're crushing it! 💪",
+                        "One step closer! 🎯",
+                        "Amazing work! 🌟",
+                        "Keep it up! 🔥"
+                    ];
+                    const random = encouragements[Math.floor(Math.random() * encouragements.length)];
+                    showQuickMessage(random);
+                }
+                
+            } catch (error) {
+                console.error('Error updating task:', error);
+            }
+        }
+
+        function showQuickMessage(message) {
+            const div = document.createElement('div');
+            div.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: white;
+                padding: 15px 30px;
+                border-radius: 25px;
+                font-weight: 700;
+                z-index: 9999;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+                animation: slideUp 0.5s ease;
+            `;
+            div.textContent = message;
+            document.body.appendChild(div);
+            
+            setTimeout(() => {
+                div.style.animation = 'slideDown 0.5s ease';
+                setTimeout(() => div.remove(), 500);
+            }, 2000);
+        }
+
+        function editTodoList() {
+            if (!currentTodoList) return;
+            
+            const tasks = currentTodoList.todo_items
+                .sort((a, b) => a.task_order - b.task_order)
+                .map(item => item.task_text)
+                .join('\n');
+            
+            document.getElementById('todoTextarea').value = tasks;
+            showEditMode();
+        }
+
+        async function startNewTodoList() {
+            if (!currentTodoList) {
+                showEditMode();
+                return;
+            }
+
+            const confirmed = confirm('Start a new to-do list? This will save your current progress to GPA and create a fresh list! 🎯');
+            if (!confirmed) return;
+
+            // Calculate and save GPA before starting new list
+            await calculateAndSaveGPA();
+            
+            currentTodoList = null;
+            showEditMode();
+            document.getElementById('todoTextarea').value = '';
+            
+            alert('New day, new goals! ✨ Let\'s do this, Aiko! 💪');
+        }
+
+        async function calculateAndSaveGPA() {
+            // GPA is automatically calculated from database
+            await calculateGPA();
+        }
+
+        async function calculateGPA() {
+            try {
+                // Get all todo lists
+                const { data: allLists, error } = await supabase
+                    .from('daily_todos')
+                    .select('*, todo_items(*)');
+
+                if (error) throw error;
+
+                allTodoLists = allLists || [];
+
+                let totalTasks = 0;
+                let completedTasks = 0;
+
+                allTodoLists.forEach(list => {
+                    if (list.todo_items) {
+                        totalTasks += list.todo_items.length;
+                        completedTasks += list.todo_items.filter(item => item.completed).length;
+                    }
+                });
+
+                const incompleteTasks = totalTasks - completedTasks;
+
+                // Calculate GPA (0.0 to 4.0)
+                const completionRate = totalTasks > 0 ? completedTasks / totalTasks : 0;
+                const gpa = completionRate * 4.0;
+
+                // Update UI
+                document.getElementById('totalTasks').textContent = totalTasks;
+                document.getElementById('completedTasks').textContent = completedTasks;
+                document.getElementById('incompleteTasks').textContent = incompleteTasks;
+                document.getElementById('gpaText').textContent = gpa.toFixed(2);
+
+                // Update circle
+                updateGPACircle(gpa);
+
+            } catch (error) {
+                console.error('Error calculating GPA:', error);
+            }
+        }
+
+        function updateGPACircle(gpa) {
+            const circle = document.getElementById('gpaCircle');
+            const circumference = 2 * Math.PI * 65; // radius = 65
+            const percentage = (gpa / 4.0) * 100;
+            const offset = circumference - (percentage / 100) * circumference;
+
+            circle.style.strokeDashoffset = offset;
+
+            // Color based on GPA
+            let color;
+            if (gpa >= 3.5) {
+                color = '#00b894'; // Green - Excellent
+            } else if (gpa >= 3.0) {
+                color = '#55efc4'; // Light Green - Good
+            } else if (gpa >= 2.5) {
+                color = '#ffeaa7'; // Yellow - Fair
+            } else if (gpa >= 2.0) {
+                color = '#fdcb6e'; // Orange - Needs work
+            } else {
+                color = '#ff7675'; // Red - Need more effort
+            }
+
+            circle.style.stroke = color;
+            document.getElementById('gpaText').style.color = color;
+        }
+
+        // Load all todos on startup
+        async function loadAllTodos() {
+            await calculateGPA();
+        }
+
+
+        // ============================================
         // ADMIN FUNCTIONS
         // ============================================
         function openAdmin() {
@@ -3531,4 +4376,4 @@
         });
     </script>
 </body>
-                                                               </html>
+    </html>

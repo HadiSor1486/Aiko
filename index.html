@@ -24,6 +24,24 @@
             --shadow-soft: rgba(0, 0, 0, 0.08);
         }
 
+        /* Night Theme - Cute & Magical */
+        body.theme-night {
+            --primary: #e8b4e0;
+            --primary-light: #f5d5f0;
+            --primary-dark: #d49acd;
+            --secondary: #a8d8ea;
+            --secondary-light: #c5f0f7;
+            --accent: #ffd1dc;
+            --accent-light: #ffe8f0;
+            --bg-gradient-start: #2d1b4e;
+            --bg-gradient-end: #1a0f2e;
+            --text-dark: #ffe8f5;
+            --text-light: #c9b8d4;
+            --white: #3d2b5e;
+            --shadow: rgba(232, 180, 224, 0.3);
+            --shadow-soft: rgba(0, 0, 0, 0.4);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -36,9 +54,10 @@
             min-height: 100vh;
             color: var(--text-dark);
             overflow-x: hidden;
+            transition: background 0.5s ease;
         }
 
-        /* Floating hearts animation */
+        /* Floating hearts animation - only in default theme */
         .hearts-container {
             position: fixed;
             top: 0;
@@ -48,6 +67,10 @@
             pointer-events: none;
             overflow: hidden;
             z-index: 0;
+        }
+
+        body.theme-night .hearts-container {
+            display: none;
         }
 
         .heart {
@@ -71,6 +94,107 @@
             100% {
                 transform: translateY(-100vh) rotate(720deg);
                 opacity: 0;
+            }
+        }
+
+        /* Magical Night Theme Elements */
+        .night-magic-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+            display: none;
+        }
+
+        body.theme-night .night-magic-container {
+            display: block;
+        }
+
+        /* Twinkling Stars */
+        .magic-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8), 0 0 20px 4px rgba(232, 180, 224, 0.5);
+            animation: magic-twinkle 2s infinite ease-in-out;
+        }
+
+        @keyframes magic-twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* Shooting Stars */
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fff, #e8b4e0, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: shoot-star 3s linear infinite;
+            transform: rotate(-45deg);
+        }
+
+        @keyframes shoot-star {
+            0% {
+                transform: translateX(-100px) translateY(100px) rotate(-45deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw) translateY(-100vh) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
+        /* Floating Moons */
+        .floating-moon {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0.4;
+            animation: float-moon 20s infinite ease-in-out;
+            filter: drop-shadow(0 0 10px rgba(232, 180, 224, 0.6));
+        }
+
+        @keyframes float-moon {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(10deg);
+            }
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #fff 0%, #e8b4e0 50%, transparent 70%);
+            border-radius: 50%;
+            animation: sparkle-dance 4s infinite ease-in-out;
+        }
+
+        @keyframes sparkle-dance {
+            0%, 100% { 
+                opacity: 0; 
+                transform: scale(0) rotate(0deg); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1) rotate(180deg); 
             }
         }
 
@@ -106,6 +230,10 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.5s ease;
+        }
+
+        body.theme-night .welcome-overlay {
+            background: rgba(45, 27, 78, 0.95);
         }
 
         .welcome-overlay.active {
@@ -173,78 +301,11 @@
             color: var(--text-dark);
         }
 
-        /* Admin Button */
-        .admin-btn {
+        /* To-Do List Button - Top Left */
+        .todo-btn {
             position: fixed;
             top: 20px;
             left: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: var(--secondary);
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            z-index: 100;
-            transition: all 0.3s ease;
-            opacity: 0.6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .admin-btn:hover {
-            opacity: 1;
-            transform: scale(1.1);
-            background: var(--primary);
-        }
-
-        /* Gift Button */
-        .gift-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 100;
-            transition: all 0.3s ease;
-            opacity: 0.8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(255, 217, 61, 0.4);
-            animation: giftPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes giftPulse {
-            0%, 100% {
-                transform: scale(1);
-                box-shadow: 0 4px 15px rgba(255, 217, 61, 0.4);
-            }
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 6px 20px rgba(255, 217, 61, 0.6);
-            }
-        }
-
-        .gift-btn:hover {
-            opacity: 1;
-            transform: scale(1.15);
-            animation: none;
-        }
-
-        /* To-Do List Button */
-        .todo-btn {
-            position: fixed;
-            top: 80px;
-            right: 20px;
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -260,7 +321,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
-            animation: todoPulse 2s ease-in-out infinite 0.5s;
+            animation: todoPulse 2s ease-in-out infinite;
         }
 
         @keyframes todoPulse {
@@ -280,10 +341,97 @@
             animation: none;
         }
 
-        /* Notification Bell Button */
+        /* Gift Button - Top Right */
+        .gift-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 217, 61, 0.4);
+            animation: giftPulse 2s ease-in-out infinite;
+        }
+
+        .gift-btn.visible {
+            display: flex;
+        }
+
+        @keyframes giftPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(255, 217, 61, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(255, 217, 61, 0.6);
+            }
+        }
+
+        .gift-btn:hover {
+            opacity: 1;
+            transform: scale(1.15);
+            animation: none;
+        }
+
+        /* Duaa Button - Cute Pink/White */
+        .duaa-btn {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid white;
+            background: linear-gradient(135deg, #ffb7d5, #ff9ecd);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 158, 205, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
+            animation: duaaPulse 2s ease-in-out infinite 0.5s;
+        }
+
+        .duaa-btn.visible {
+            display: flex;
+        }
+
+        @keyframes duaaPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(255, 158, 205, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(255, 158, 205, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .duaa-btn:hover {
+            opacity: 1;
+            transform: scale(1.15);
+            animation: none;
+        }
+
+        /* Notification Bell Button - Dynamic Position */
         .notif-btn {
             position: fixed;
-            top: 140px;
             right: 20px;
             width: 50px;
             height: 50px;
@@ -302,6 +450,16 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+        }
+
+        /* Position when duaa exists (below duaa at 140px) */
+        .notif-btn.position-with-duaa {
+            top: 140px;
+        }
+
+        /* Position when no duaa (below gift at 80px) */
+        .notif-btn.position-no-duaa {
+            top: 80px;
         }
 
         .notif-btn.visible {
@@ -373,8 +531,8 @@
         .messages-container {
             position: fixed;
             top: 200px;
-            right: 80px; /* Moved left to not cross bell's vertical line (bell is at right: 20px with 50px width) */
-            width: 260px; /* Slightly narrower to fit */
+            right: 80px;
+            width: 260px;
             max-height: 450px;
             display: none;
             flex-direction: column;
@@ -413,19 +571,28 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             position: relative;
             opacity: 0;
-            transform: translateX(80px) scale(0.6); /* Start further right, from bell's position */
+            transform: translateX(80px) scale(0.6);
             animation: slideInMessage 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            max-width: 240px; /* Adjusted for narrower container */
+            max-width: 240px;
             word-wrap: break-word;
             border-left: 3px solid var(--primary);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: none;
         }
 
+        body.theme-night .message-bubble {
+            background: rgba(61, 43, 94, 0.95);
+            color: var(--text-dark);
+        }
+
         .message-bubble:hover {
             transform: translateX(0) scale(1.03);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             background: rgba(255, 255, 255, 1);
+        }
+
+        body.theme-night .message-bubble:hover {
+            background: rgba(71, 53, 104, 1);
         }
 
         .message-bubble.new-message {
@@ -506,15 +673,227 @@
             display: block;
         }
 
-        /* Mobile responsive for messages */
+        /* Duaa Overlay - Cute Pink Theme */
+        .duaa-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .duaa-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .duaa-container {
+            background: linear-gradient(135deg, #fff5f9 0%, #ffe8f2 50%, #fff0f7 100%);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                inset 0 0 60px rgba(255, 183, 213, 0.2);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.4s ease;
+            border: 3px solid rgba(255, 158, 205, 0.4);
+        }
+
+        body.theme-night .duaa-container {
+            background: linear-gradient(135deg, #4a3a5e 0%, #3d2b5e 50%, #4a3a5e 100%);
+            border: 3px solid rgba(232, 180, 224, 0.4);
+        }
+
+        .duaa-overlay.active .duaa-container {
+            transform: scale(1);
+        }
+
+        .duaa-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 158, 205, 0.2);
+            color: #ff7eb8;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .duaa-close:hover {
+            background: rgba(255, 158, 205, 0.4);
+            transform: rotate(90deg);
+        }
+
+        .duaa-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 158, 205, 0.3);
+        }
+
+        body.theme-night .duaa-header {
+            border-bottom: 2px solid rgba(232, 180, 224, 0.3);
+        }
+
+        .duaa-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 2px 4px rgba(255, 158, 205, 0.3));
+        }
+
+        .duaa-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ff7eb8;
+            margin-bottom: 10px;
+        }
+
+        body.theme-night .duaa-title {
+            color: #e8b4e0;
+        }
+
+        .duaa-subtitle {
+            font-size: 14px;
+            color: #b88aa0;
+        }
+
+        body.theme-night .duaa-subtitle {
+            color: #c9b8d4;
+        }
+
+        .duaa-content {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255, 158, 205, 0.3);
+        }
+
+        body.theme-night .duaa-content {
+            background: rgba(61, 43, 94, 0.6);
+            border: 2px solid rgba(232, 180, 224, 0.3);
+        }
+
+        .duaa-text {
+            font-size: 18px;
+            line-height: 2;
+            color: #5a4a5a;
+            text-align: center;
+            font-family: 'Amiri', serif;
+            direction: rtl;
+        }
+
+        body.theme-night .duaa-text {
+            color: #ffe8f5;
+        }
+
+        .duaa-translation {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #8a7a8a;
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 158, 205, 0.3);
+            font-style: italic;
+        }
+
+        body.theme-night .duaa-translation {
+            color: #c9b8d4;
+            border-top: 1px solid rgba(232, 180, 224, 0.3);
+        }
+
+        .duaa-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .duaa-nav-btn {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #ffb7d5, #ff9ecd);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 158, 205, 0.4);
+        }
+
+        .duaa-nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 158, 205, 0.6);
+        }
+
+        .duaa-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .duaa-counter {
+            font-size: 14px;
+            color: #ff7eb8;
+            font-weight: 600;
+        }
+
+        body.theme-night .duaa-counter {
+            color: #e8b4e0;
+        }
+
+        .duaa-empty {
+            text-align: center;
+            padding: 40px;
+            color: #8a7a8a;
+        }
+
+        .duaa-empty-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        /* Cute pattern decoration */
+        .duaa-pattern {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border-radius: 25px;
+            pointer-events: none;
+            opacity: 0.08;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 5 L25 15 L35 15 L27 22 L30 32 L20 26 L10 32 L13 22 L5 15 L15 15 Z' fill='none' stroke='%23ff9ecd' stroke-width='1'/%3E%3C/svg%3E");
+        }
+
+        /* Mobile responsive */
         @media (max-width: 480px) {
             .messages-container {
                 width: calc(100vw - 100px);
-
                 right: 75px;
-
                 left: auto;
-
                 top: 160px;
                 padding: 10px;
                 background: transparent;
@@ -527,16 +906,54 @@
 
             @keyframes slideInMessageMobile {
                 from {
-
                     opacity: 0;
-
                     transform: translateX(60px) scale(0.7);
-
                 }
                 to {
                     opacity: 1;
                     transform: translateY(0) scale(1);
                 }
+            }
+
+            .duaa-container {
+                padding: 25px;
+            }
+
+            .duaa-title {
+                font-size: 22px;
+            }
+
+            .duaa-text {
+                font-size: 16px;
+            }
+
+            .gift-btn, .duaa-btn, .todo-btn, .notif-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+
+            .todo-btn {
+                top: 15px;
+                left: 15px;
+            }
+
+            .gift-btn {
+                top: 15px;
+                right: 15px;
+            }
+
+            .duaa-btn {
+                top: 70px;
+                right: 15px;
+            }
+
+            .notif-btn.position-with-duaa {
+                top: 120px;
+            }
+
+            .notif-btn.position-no-duaa {
+                top: 70px;
             }
         }
 
@@ -573,6 +990,10 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             transform: scale(0.9);
             transition: transform 0.3s ease;
+        }
+
+        body.theme-night .todo-modal {
+            background: linear-gradient(135deg, #4a3a5e, #3d2b5e);
         }
 
         .todo-modal-overlay.active .todo-modal {
@@ -622,6 +1043,10 @@
             overflow: visible;
         }
 
+        body.theme-night .gpa-container {
+            background: #3d2b5e;
+        }
+
         .gpa-circle {
             position: relative;
             width: 150px;
@@ -639,6 +1064,10 @@
             fill: none;
             stroke: #f0f0f0;
             stroke-width: 12;
+        }
+
+        body.theme-night .gpa-circle-bg {
+            stroke: #5a4a6e;
         }
 
         .gpa-circle-progress {
@@ -716,6 +1145,8 @@
             line-height: 2;
             resize: vertical;
             transition: border-color 0.3s ease;
+            background: var(--white);
+            color: var(--text-dark);
         }
 
         .todo-textarea:focus {
@@ -768,6 +1199,10 @@
             transition: all 0.3s ease;
         }
 
+        body.theme-night .todo-item {
+            background: #4a3a5e;
+        }
+
         .todo-item:hover {
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transform: translateX(5px);
@@ -790,7 +1225,6 @@
             accent-color: var(--primary);
         }
 
-        /* RTL Support */
         .todo-item[dir="rtl"] .todo-checkbox {
             margin-right: 0;
             margin-left: 15px;
@@ -1087,6 +1521,10 @@
             margin-bottom: 10px;
         }
 
+        body.theme-night .progress-bar-container {
+            background: #4a3a5e;
+        }
+
         .progress-bar-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
@@ -1106,7 +1544,7 @@
             color: var(--text-light);
         }
 
-        /* Days Container - Scrollable Grid */
+        /* Days Container */
         .days-container {
             width: 100%;
             max-width: 900px;
@@ -1192,6 +1630,10 @@
             opacity: 0.5;
             cursor: not-allowed;
             background: #f5f5f5;
+        }
+
+        body.theme-night .day-card.locked {
+            background: #2d1b4e;
         }
 
         .day-card.locked:hover {
@@ -1539,28 +1981,6 @@
             50% { transform: translateY(-5px); }
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translate(-50%, 20px);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
-            to {
-                opacity: 0;
-                transform: translate(-50%, 20px);
-            }
-        }
-
         .message-parts-container {
             display: block;
         }
@@ -1637,335 +2057,7 @@
             transform: none;
         }
 
-        /* Admin Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--white);
-            border-radius: 25px;
-            padding: 30px;
-            max-width: 700px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--primary-light);
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-dark);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 28px;
-            color: var(--text-light);
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .modal-close:hover {
-            color: var(--primary-dark);
-        }
-
-        /* Password Screen */
-        .password-screen {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .password-input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid var(--primary-light);
-            border-radius: 15px;
-            font-family: inherit;
-            font-size: 16px;
-            margin: 20px 0;
-            text-align: center;
-            transition: border-color 0.3s ease;
-        }
-
-        .password-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .submit-btn {
-            padding: 15px 40px;
-            border-radius: 25px;
-            border: none;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            font-family: inherit;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px var(--shadow);
-        }
-
-        /* Admin Panel */
-        .admin-panel {
-            display: none;
-        }
-
-        .admin-panel.active {
-            display: block;
-        }
-
-        .admin-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        .admin-tab {
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 2px solid var(--primary-light);
-            background: var(--white);
-            color: var(--text-dark);
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .admin-tab:hover, .admin-tab.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        .admin-section {
-            display: none;
-        }
-
-        .admin-section.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .form-input, .form-textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--primary-light);
-            border-radius: 15px;
-            font-family: inherit;
-            font-size: 15px;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .form-textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .toggle {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background: var(--primary-light);
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .toggle.active {
-            background: var(--primary);
-        }
-
-        .toggle-slider {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle.active .toggle-slider {
-            transform: translateX(30px);
-        }
-
-        .parts-container {
-            margin-top: 20px;
-        }
-
-        .part-item {
-            background: var(--bg-gradient-start);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 2px solid var(--primary-light);
-        }
-
-        .part-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .part-number {
-            font-weight: 700;
-            color: var(--primary-dark);
-        }
-
-        .part-remove {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 5px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .add-part-btn {
-            width: 100%;
-            padding: 15px;
-            border: 2px dashed var(--primary);
-            border-radius: 15px;
-            background: transparent;
-            color: var(--primary-dark);
-            font-family: inherit;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .add-part-btn:hover {
-            background: var(--primary-light);
-        }
-
-        .days-list {
-            display: grid;
-            gap: 15px;
-        }
-
-        .day-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: var(--bg-gradient-start);
-            border-radius: 15px;
-            border: 2px solid var(--primary-light);
-        }
-
-        .day-info {
-            font-weight: 600;
-        }
-
-        .day-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .day-edit, .day-delete {
-            padding: 8px 15px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .day-edit {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .day-delete {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .save-btn {
-            width: 100%;
-            padding: 15px;
-            border-radius: 15px;
-            border: none;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            font-family: inherit;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .save-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px var(--shadow);
-        }
-
-        .save-btn:disabled {
-            background: var(--text-light);
-            cursor: not-allowed;
-            transform: none;
-        }
-
+        /* Loading */
         .loading {
             text-align: center;
             padding: 40px;
@@ -1995,106 +2087,6 @@
         .empty-state-icon {
             font-size: 60px;
             margin-bottom: 15px;
-        }
-
-        /* File Upload Styles */
-        .file-upload {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            border: 2px dashed var(--primary-light);
-            border-radius: 15px;
-            background: var(--bg-gradient-start);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .file-upload:hover {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-
-        .file-upload input[type="file"] {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-upload-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .file-upload-text {
-            font-size: 14px;
-            color: var(--text-light);
-            text-align: center;
-        }
-
-        .file-upload-preview {
-            max-width: 150px;
-            max-height: 150px;
-            border-radius: 10px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .file-upload-preview.active {
-            display: block;
-        }
-
-        .file-upload.has-file {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-
-        .upload-progress {
-            width: 100%;
-            height: 6px;
-            background: var(--primary-light);
-            border-radius: 3px;
-            margin-top: 10px;
-            overflow: hidden;
-            display: none;
-        }
-
-        .upload-progress.active {
-            display: block;
-        }
-
-        .upload-progress-bar {
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 3px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-
-        .image-preview-container {
-            position: relative;
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        .remove-image-btn {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         /* Voice Message Player */
@@ -2180,58 +2172,6 @@
             font-weight: 600;
         }
 
-        .voice-upload-area {
-            border: 2px dashed var(--primary-light);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .voice-upload-area:hover {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-
-        .voice-upload-area.has-file {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
-        }
-
-        .voice-upload-icon {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-
-        .voice-upload-text {
-            color: var(--text-dark);
-            font-size: 14px;
-        }
-
-        .voice-preview-player {
-            margin-top: 10px;
-        }
-
-        .remove-voice-btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 16px;
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all 0.3s ease;
-        }
-
-        .remove-voice-btn:hover {
-            background: #ff5252;
-            transform: scale(1.05);
-        }
-
         /* Footer */
         .footer {
             margin-top: 40px;
@@ -2309,35 +2249,6 @@
                 height: 200px;
             }
 
-            .gift-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 20px;
-            }
-
-            .todo-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 20px;
-                top: 80px;
-            }
-
-            .notif-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 20px;
-                top: 140px;
-            }
-
-            .todo-modal {
-                width: 95%;
-                padding: 20px;
-            }
-
-            .todo-modal-title {
-                font-size: 22px;
-            }
-
             .gpa-circle {
                 width: 120px;
                 height: 120px;
@@ -2357,10 +2268,6 @@
             .todo-actions {
                 flex-direction: column;
             }
-
-            .modal {
-                padding: 20px;
-            }
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
@@ -2375,12 +2282,14 @@
             }
         }
     </style>
-<base target="_blank">
-<base target="_blank">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Floating Hearts Background -->
+    <!-- Floating Hearts Background (Default Theme) -->
     <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- Magical Night Theme Elements -->
+    <div class="night-magic-container" id="nightMagicContainer"></div>
 
     <!-- Fireworks Canvas -->
     <canvas class="fireworks-canvas" id="fireworksCanvas"></canvas>
@@ -2395,16 +2304,16 @@
         </div>
     </div>
 
-    <!-- Admin Button -->
-    <button class="admin-btn" onclick="openAdmin()" title="Admin">⚙️</button>
-
-    <!-- Gift Button -->
-    <button class="gift-btn" onclick="playGiftVideo()" title="Special Gift" id="giftBtn" style="display: none;">🎁</button>
-
-    <!-- To-Do List Button -->
+    <!-- To-Do List Button - Top Left -->
     <button class="todo-btn" onclick="openTodoModal()" title="To-Do List & GPA">✅</button>
 
-    <!-- Notification Bell Button -->
+    <!-- Gift Button - Top Right -->
+    <button class="gift-btn" onclick="playGiftVideo()" title="Special Gift" id="giftBtn">🎁</button>
+
+    <!-- Duaa Button - Below Gift -->
+    <button class="duaa-btn" onclick="openDuaaOverlay()" title="Duaa & Prayers" id="duaaBtn">🤲🏻</button>
+
+    <!-- Notification Bell Button - Dynamic Position -->
     <button class="notif-btn" onclick="toggleMessages()" title="Messages" id="notifBtn">
         🔔
         <span class="notif-badge" id="notifBadge" style="display: none;">0</span>
@@ -2412,6 +2321,25 @@
 
     <!-- Messages Container -->
     <div class="messages-container" id="messagesContainer"></div>
+
+    <!-- Duaa Overlay -->
+    <div class="duaa-overlay" id="duaaOverlay" onclick="closeDuaaOverlay(event)">
+        <div class="duaa-container" onclick="event.stopPropagation()">
+            <div class="duaa-pattern"></div>
+            <button class="duaa-close" onclick="closeDuaaOverlay()">&times;</button>
+            <div class="duaa-header">
+                <div class="duaa-icon">🤲🏻</div>
+                <h2 class="duaa-title">Duaa & Prayers</h2>
+                <p class="duaa-subtitle">May Allah bless you always</p>
+            </div>
+            <div id="duaaContent">
+                <div class="duaa-empty">
+                    <div class="duaa-empty-icon">🌸</div>
+                    <p>No duaa added yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- To-Do Modal -->
     <div class="todo-modal-overlay" id="todoModalOverlay" onclick="closeTodoModal()">
@@ -2587,156 +2515,8 @@ Example:
         </footer>
     </div>
 
-    <!-- Admin Modal -->
-    <div class="modal-overlay" id="adminModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Admin Panel</h2>
-                <button class="modal-close" onclick="closeAdmin()">&times;</button>
-            </div>
-
-            <!-- Password Screen -->
-            <div class="password-screen" id="passwordScreen">
-                <div style="font-size: 50px; margin-bottom: 20px;">🔐</div>
-                <h3>Enter Admin Password</h3>
-                <input type="password" class="password-input" id="passwordInput" placeholder="Enter password...">
-                <button class="submit-btn" onclick="checkPassword()">Enter</button>
-                <p id="passwordError" style="color: #ff6b6b; margin-top: 15px; display: none;">Incorrect password!</p>
-            </div>
-
-            <!-- Admin Panel -->
-            <div class="admin-panel" id="adminPanelContent">
-                <div class="admin-tabs">
-                    <button class="admin-tab active" onclick="switchTab('settings')">⚙️ Settings</button>
-                    <button class="admin-tab" onclick="switchTab('welcome')">Welcome Message</button>
-                    <button class="admin-tab" onclick="switchTab('character')">Character</button>
-                    <button class="admin-tab" onclick="switchTab('days')">Manage Days</button>
-                    <button class="admin-tab" onclick="switchTab('add')">Add/Edit Day</button>
-                    <button class="admin-tab" onclick="switchTab('messages')">💬 Messages</button>
-                </div>
-
-                <!-- Settings -->
-                <div class="admin-section active" id="tab-settings">
-                    <div class="form-group">
-                        <label class="form-label">Total Number of Days</label>
-                        <input type="number" class="form-input" id="totalDaysInput" min="1" placeholder="Enter total days (e.g., 15, 30, 50)">
-                        <p style="color: #8a7a8a; font-size: 14px; margin-top: 8px;">
-                            💡 This controls how many days Aiko needs to complete before seeing the congratulations message.
-                        </p>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Gift Video (Special Surprise) 🎁</label>
-                        <div class="file-upload" id="giftVideoUpload">
-                            <input type="file" id="giftVideoFileInput" accept="video/*" onchange="handleGiftVideoUpload(this)">
-                            <div class="file-upload-icon">🎬</div>
-                            <div class="file-upload-text">Click to upload a video<br><small>MP4, MOV, WEBM, etc.</small></div>
-                            <div class="video-preview-container" id="giftVideoPreviewContainer" style="display: none;">
-                                <video class="file-upload-preview" id="giftVideoPreview" style="border-radius: 50%; width: 150px; height: 150px; object-fit: cover;" controls></video>
-                                <button type="button" class="remove-image-btn" onclick="removeGiftVideo()">&times;</button>
-                            </div>
-                            <div class="upload-progress" id="giftVideoUploadProgress">
-                                <div class="upload-progress-bar" id="giftVideoProgressBar"></div>
-                            </div>
-                        </div>
-                        <input type="hidden" id="giftVideoUrl">
-                        <p style="color: #8a7a8a; font-size: 14px; margin-top: 8px;">
-                            🎁 Upload a special video that will appear when Aiko clicks the gift button!
-                        </p>
-                    </div>
-
-                    <button class="save-btn" onclick="saveSettings()">Save Settings</button>
-                </div>
-
-                <!-- Welcome Settings -->
-                <div class="admin-section" id="tab-welcome">
-                    <div class="form-group">
-                        <label class="form-label">Welcome Icon (emoji)</label>
-                        <input type="text" class="form-input" id="welcomeIconInput" placeholder="🌸">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Welcome Title</label>
-                        <input type="text" class="form-input" id="welcomeTitleInput" placeholder="Hello Aiko!">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Welcome Message</label>
-                        <textarea class="form-textarea" id="welcomeTextInput" placeholder="Enter your welcome message..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Hide Welcome Message Forever</label>
-                        <div class="toggle-container">
-                            <div class="toggle" id="hideWelcomeToggle" onclick="toggleWelcome()">
-                                <div class="toggle-slider"></div>
-                            </div>
-                            <span id="toggleStatus">Off</span>
-                        </div>
-                    </div>
-                    <button class="save-btn" onclick="saveWelcomeSettings()">Save Settings</button>
-                </div>
-
-                <!-- Character Settings -->
-                <div class="admin-section" id="tab-character">
-                    <div class="form-group">
-                        <label class="form-label">Character Image</label>
-                        <div class="file-upload" id="characterUpload">
-                            <input type="file" id="characterFileInput" accept="image/*" onchange="handleCharacterUpload(this)">
-                            <div class="file-upload-icon">📷</div>
-                            <div class="file-upload-text">Click to upload an image<br><small>or drag and drop</small></div>
-                            <img class="file-upload-preview" id="characterPreview">
-                            <div class="upload-progress" id="characterUploadProgress">
-                                <div class="upload-progress-bar" id="characterProgressBar"></div>
-                            </div>
-                        </div>
-                        <input type="hidden" id="characterImageUrl">
-                    </div>
-                    <button class="save-btn" id="saveCharacterBtn" onclick="saveCharacter()">Save Character</button>
-                </div>
-
-                <!-- Days List -->
-                <div class="admin-section" id="tab-days">
-                    <div class="days-list" id="daysList">
-                        <div class="loading">Loading days...</div>
-                    </div>
-                </div>
-
-                <!-- Add/Edit Day -->
-                <div class="admin-section" id="tab-add">
-                    <div class="form-group">
-                        <label class="form-label">Day Number</label>
-                        <input type="number" class="form-input" id="dayNumberInput" min="1" placeholder="Enter day number">
-                    </div>
-                    <div class="parts-container" id="partsContainer">
-                        <!-- Parts will be added here -->
-                    </div>
-                    <button class="add-part-btn" onclick="addPart()">+ Add Message Part</button>
-                    <button class="save-btn" id="saveDayBtn" onclick="saveDay()">Save Day</button>
-                </div>
-
-                <!-- Messages -->
-                <div class="admin-section" id="tab-messages">
-                    <div class="form-group">
-                        <label class="form-label">Send Message to Aiko 💬</label>
-                        <textarea class="form-textarea" id="newMessageText" placeholder="Write a casual message to encourage Aiko...
-
-Examples:
-Hey! Just checking in - hope your studying is going well! 💪
-Remember to take breaks! You're doing amazing! ✨
-Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
-                    </div>
-                    <button class="save-btn" onclick="sendMessage()">📨 Send Message</button>
-
-                    <div style="margin-top: 30px;">
-                        <h3 style="color: var(--text-dark); margin-bottom: 15px;">📬 Sent Messages</h3>
-                        <div id="messagesList" style="display: flex; flex-direction: column; gap: 10px;">
-                            <p style="color: var(--text-light); text-align: center; padding: 20px;">No messages yet</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
+
         // ============================================
         // SUPABASE CONFIGURATION
         // ============================================
@@ -2759,19 +2539,16 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
         let dayData = null;
         let allDays = [];
         let welcomeSettings = {};
-        let editingDayId = null;
-        let partCounter = 0;
-        let uploadedFiles = {};
-        let totalDays = 15; // Default value, will be loaded from database
+        let totalDays = 15;
         let currentProgressNote = null;
-        let dayProgressNotes = new Map(); // Store progress notes for days
-        let currentTodoList = null; // Current to-do list
-        let allTodoLists = []; // All to-do lists for GPA calculation
-        let allMessages = []; // All messages
-        let newMessageCount = 0; // Count of messages
-        let messagesOpen = false; // Messages container state
-
-        const ADMIN_PASSWORD = 'sorex123';
+        let dayProgressNotes = new Map();
+        let currentTodoList = null;
+        let allTodoLists = [];
+        let allMessages = [];
+        let messagesOpen = false;
+        let allDuaas = [];
+        let currentDuaaIndex = 0;
+        let giftVideoUrl = '';
         const STORAGE_BUCKET = 'images';
 
         // ============================================
@@ -2779,12 +2556,7 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
             createFloatingHearts();
-
-            // Clean up old localStorage items (no longer needed with auto-delete)
-            localStorage.removeItem('messagesOpened');
-            localStorage.removeItem('lastViewedMessageTime');
-            localStorage.removeItem('hasUnreadMessages');
-
+            createNightMagic();
             loadData();
         });
 
@@ -2801,6 +2573,90 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
                 heart.style.animationDuration = (10 + Math.random() * 10) + 's';
                 container.appendChild(heart);
             }
+        }
+
+        function createNightMagic() {
+            const container = document.getElementById('nightMagicContainer');
+            
+            // Twinkling stars
+            for (let i = 0; i < 60; i++) {
+                const star = document.createElement('div');
+                star.className = 'magic-star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+                container.appendChild(star);
+            }
+            
+            // Shooting stars
+            for (let i = 0; i < 5; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                shootingStar.style.top = Math.random() * 50 + '%';
+                shootingStar.style.left = Math.random() * 50 + '%';
+                shootingStar.style.animationDelay = (i * 2 + Math.random() * 2) + 's';
+                shootingStar.style.animationDuration = (2.5 + Math.random() * 1.5) + 's';
+                container.appendChild(shootingStar);
+            }
+            
+            // Floating moons
+            const moons = ['🌙', '✨', '💫', '🌟'];
+            for (let i = 0; i < 8; i++) {
+                const moon = document.createElement('div');
+                moon.className = 'floating-moon';
+                moon.textContent = moons[Math.floor(Math.random() * moons.length)];
+                moon.style.left = Math.random() * 100 + '%';
+                moon.style.top = Math.random() * 100 + '%';
+                moon.style.animationDelay = Math.random() * 20 + 's';
+                moon.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(moon);
+            }
+            
+            // Sparkles
+            for (let i = 0; i < 30; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDelay = Math.random() * 4 + 's';
+                sparkle.style.animationDuration = (3 + Math.random() * 2) + 's';
+                container.appendChild(sparkle);
+            }
+        }
+
+        // ============================================
+        // THEME FUNCTIONS
+        // ============================================
+        async function loadTheme() {
+            try {
+                const { data, error } = await supabase
+                    .from('themes')
+                    .select('*')
+                    .eq('id', 1)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Error loading theme:', error);
+                    return;
+                }
+
+                if (data) {
+                    applyTheme(data.theme_name);
+                }
+            } catch (error) {
+                console.error('Error loading theme:', error);
+            }
+        }
+
+        function applyTheme(themeName) {
+            document.body.classList.remove('theme-night');
+            
+            if (themeName === 'night') {
+                document.body.classList.add('theme-night');
+            }
+            
+            console.log('Theme applied:', themeName);
         }
 
         // ============================================
@@ -2977,14 +2833,11 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             
             fireworksCanvas.classList.add('active');
             
-            // Launch initial burst
             for (let i = 0; i < 3; i++) {
                 setTimeout(() => launchFirework(fireworksCanvas), i * 200);
             }
             
             animateFireworks();
-            
-            console.log('🎆 FIREWORKS STARTED! All days created! 🎉');
         }
 
         function stopFireworks() {
@@ -3000,16 +2853,13 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
         }
 
         function checkAndTriggerFireworks() {
-            // Check if all days are created
             if (allDays.length === totalDays && totalDays > 0) {
-                console.log(`✨ All ${totalDays} days created! Triggering fireworks!`);
                 startFireworks();
             } else {
                 stopFireworks();
             }
         }
 
-        // Handle window resize
         window.addEventListener('resize', () => {
             if (fireworksCanvas && fireworksCanvas.classList.contains('active')) {
                 fireworksCanvas.width = window.innerWidth;
@@ -3017,16 +2867,17 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             }
         });
 
+        // ============================================
+        // DATA LOADING
+        // ============================================
         async function loadData() {
             try {
-                // Load settings
                 await loadSettings();
-                
-                // Load gift video
+                await loadTheme();
                 await loadGiftVideo();
+                await loadDuaas();
 
-                // Load welcome settings
-                const { data: welcomeData, error: welcomeError } = await supabase
+                const { data: welcomeData } = await supabase
                     .from('welcome_settings')
                     .select('*')
                     .single();
@@ -3036,8 +2887,7 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
                     applyWelcomeSettings();
                 }
 
-                // Load character
-                const { data: charData, error: charError } = await supabase
+                const { data: charData } = await supabase
                     .from('character')
                     .select('*')
                     .single();
@@ -3047,16 +2897,9 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
                         `<img src="${charData.image_url}" alt="Character">`;
                 }
 
-                // Load days
                 await loadDays();
-                
-                // Load all progress notes
                 await loadAllProgressNotes();
-                
-                // Load all todos for GPA
                 await loadAllTodos();
-                
-                // Load messages
                 await loadMessages();
 
             } catch (error) {
@@ -3065,7 +2908,6 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             }
         }
 
-        // Load Settings from Database
         async function loadSettings() {
             try {
                 const { data, error } = await supabase
@@ -3075,275 +2917,88 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
                     .single();
 
                 if (error && error.code !== 'PGRST116') {
-                    console.error('Error loading settings:', error.message, error);
-                    throw error;
+                    console.error('Error loading settings:', error);
                 }
 
                 if (data && data.value) {
                     totalDays = parseInt(data.value);
-                    console.log('Total days loaded:', totalDays);
                 } else {
-                    // Create default setting if it doesn't exist
-                    console.log('No total_days setting found, creating default...');
-                    const { error: insertError } = await supabase
-                        .from('settings')
-                        .insert({ key: 'total_days', value: '15' });
-                    
-                    if (insertError) {
-                        console.error('Error creating default setting:', insertError.message);
-                    }
+                    await supabase.from('settings').insert({ key: 'total_days', value: '15' });
                     totalDays = 15;
                 }
             } catch (error) {
-                console.error('Error loading settings:', error.message || error);
-                totalDays = 15; // Fallback to default
+                console.error('Error loading settings:', error);
+                totalDays = 15;
             }
         }
 
-        // Save Settings to Database
-        async function saveSettings() {
-            const newTotalDays = parseInt(document.getElementById('totalDaysInput').value);
-            const giftVideoUrl = document.getElementById('giftVideoUrl').value;
-            
-            let settingsSaved = false;
-
-            try {
-                // Save total days if provided and valid
-                if (newTotalDays && newTotalDays >= 1) {
-                    const { error: daysError } = await supabase
-                        .from('settings')
-                        .upsert({ key: 'total_days', value: newTotalDays.toString() }, { onConflict: 'key' });
-
-                    if (daysError) {
-                        console.error('Error saving total days:', daysError);
-                        throw new Error('Failed to save total days: ' + daysError.message);
-                    }
-
-                    totalDays = newTotalDays;
-                    settingsSaved = true;
-                }
-
-                // Save gift video URL if provided (independent of totalDays)
-                if (giftVideoUrl) {
-                    const { error: videoError } = await supabase
-                        .from('settings')
-                        .upsert({ key: 'gift_video_url', value: giftVideoUrl }, { onConflict: 'key' });
-
-                    if (videoError) {
-                        console.error('Error saving gift video:', videoError);
-                        throw new Error('Failed to save gift video: ' + videoError.message);
-                    }
-                    
-                    settingsSaved = true;
-                }
-
-                if (settingsSaved) {
-                    await loadGiftVideo(); // Reload gift video
-                    alert(`Settings saved successfully! ✅`);
-                } else {
-                    alert('Please enter total days or upload a gift video');
-                }
-                
-            } catch (error) {
-                console.error('Error saving settings:', error);
-                alert('Error saving settings: ' + error.message);
-            }
-        }
-
-        // Load gift video from database
         async function loadGiftVideo() {
             try {
-                console.log('Loading gift video...');
                 const { data, error } = await supabase
                     .from('settings')
                     .select('*')
                     .eq('key', 'gift_video_url')
                     .single();
 
-                if (error && error.code !== 'PGRST116') {
-                    console.error('Error loading gift video:', error.message, error);
-                }
-
-                console.log('Gift video data:', data);
-
                 if (data && data.value) {
-                    console.log('Gift video URL found:', data.value);
-                    document.getElementById('giftVideoUrl').value = data.value;
-                    const giftBtn = document.getElementById('giftBtn');
-                    console.log('Gift button element:', giftBtn);
-                    if (giftBtn) {
-                        giftBtn.style.display = 'flex'; // Show gift button
-                        console.log('Gift button displayed');
-                    }
-                    
-                    // Update preview if in admin
-                    loadGiftVideoPreview();
-                } else {
-                    console.log('No gift video found, hiding button');
-                    const giftBtn = document.getElementById('giftBtn');
-                    if (giftBtn) {
-                        giftBtn.style.display = 'none'; // Hide gift button
-                    }
+                    giftVideoUrl = data.value;
+                    document.getElementById('giftBtn').classList.add('visible');
                 }
             } catch (error) {
-                console.error('Error loading gift video:', error.message || error);
-                const giftBtn = document.getElementById('giftBtn');
-                if (giftBtn) {
-                    giftBtn.style.display = 'none';
-                }
+                console.error('Error loading gift video:', error);
             }
         }
 
-        // Play gift video
-        function playGiftVideo() {
-            const videoUrl = document.getElementById('giftVideoUrl').value;
-            console.log('Gift video URL:', videoUrl);
-            
-            if (!videoUrl) {
-                console.error('No gift video URL found');
-                return;
-            }
-
-            const overlay = document.getElementById('giftVideoOverlay');
-            const container = document.getElementById('giftVideoContainer');
-            const video = document.getElementById('giftVideo');
-            const playButton = document.getElementById('giftPlayButton');
-
-            // Reset video
-            video.src = videoUrl;
-            video.muted = false; // Unmute for sound
-            video.load(); // Load the video
-            
-            overlay.classList.add('active');
-            container.classList.remove('exit');
-            playButton.classList.remove('show');
-
-            // Try to play video
-            video.play().then(() => {
-                console.log('Video playing successfully with sound');
-                playButton.classList.remove('show');
-            }).catch(error => {
-                console.log('Autoplay blocked (normal on iOS), showing play button:', error.message);
-                // Show manual play button for iOS
-                playButton.classList.add('show');
-            });
-
-            // When video ends, close with animation
-            video.onended = () => {
-                container.classList.add('exit');
-                setTimeout(() => {
-                    overlay.classList.remove('active');
-                    video.pause();
-                    video.currentTime = 0;
-                    playButton.classList.remove('show');
-                }, 500);
-            };
-
-            // Hide play button once video starts playing
-            video.onplay = () => {
-                playButton.classList.remove('show');
-            };
-        }
-
-        // Manual play for iOS
-        function manualPlayGiftVideo() {
-            const video = document.getElementById('giftVideo');
-            const playButton = document.getElementById('giftPlayButton');
-            
-            video.muted = false; // Ensure unmuted
-            video.play().then(() => {
-                console.log('Manual play successful');
-                playButton.classList.remove('show');
-            }).catch(error => {
-                console.error('Manual play failed:', error);
-                alert('Could not play video. Please try again.');
-            });
-        }
-
-        // Close gift video manually
-        function closeGiftVideo() {
-            const overlay = document.getElementById('giftVideoOverlay');
-            const container = document.getElementById('giftVideoContainer');
-            const video = document.getElementById('giftVideo');
-            const playButton = document.getElementById('giftPlayButton');
-
-            container.classList.add('exit');
-            setTimeout(() => {
-                overlay.classList.remove('active');
-                video.pause();
-                video.currentTime = 0;
-                playButton.classList.remove('show');
-            }, 500);
-        }
-
-        // Handle gift video upload
-        async function handleGiftVideoUpload(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            console.log('Uploading gift video:', file.name, 'Size:', file.size);
-
-            const uploadArea = document.getElementById('giftVideoUpload');
-            const preview = document.getElementById('giftVideoPreview');
-            const previewContainer = document.getElementById('giftVideoPreviewContainer');
-            const progress = document.getElementById('giftVideoUploadProgress');
-            const progressBar = document.getElementById('giftVideoProgressBar');
-
+        async function loadDuaas() {
             try {
-                progress.classList.add('active');
-                progressBar.style.width = '0%';
+                const { data, error } = await supabase
+                    .from('duaas')
+                    .select('*')
+                    .order('order_index');
 
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-                const filePath = `videos/${fileName}`;
+                if (error) throw error;
 
-                console.log('Uploading to:', STORAGE_BUCKET, '/', filePath);
-
-                const { data, error } = await supabase.storage
-                    .from(STORAGE_BUCKET)
-                    .upload(filePath, file, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
-
-                if (error) {
-                    console.error('Upload error details:', error.message, error);
-                    throw new Error(error.message);
-                }
-
-                console.log('Upload successful:', data);
-
-                const { data: urlData } = supabase.storage
-                    .from(STORAGE_BUCKET)
-                    .getPublicUrl(filePath);
-
-                const publicUrl = urlData.publicUrl;
-                console.log('Public URL:', publicUrl);
-
-                document.getElementById('giftVideoUrl').value = publicUrl;
-                preview.src = publicUrl;
-                previewContainer.style.display = 'block';
-                uploadArea.classList.add('has-file');
-
-                progressBar.style.width = '100%';
-                
-                alert('Video uploaded successfully! Remember to click "Save Settings" to save it.');
-
+                allDuaas = data || [];
+                updateButtonPositions();
             } catch (error) {
-                console.error('Upload error:', error.message || error);
-                alert('Error uploading video: ' + (error.message || 'Unknown error. Check console for details.'));
-            } finally {
-                setTimeout(() => progress.classList.remove('active'), 500);
+                console.error('Error loading duaas:', error);
             }
         }
 
-        // Remove gift video
-        function removeGiftVideo() {
-            document.getElementById('giftVideoUrl').value = '';
-            document.getElementById('giftVideoPreview').src = '';
-            document.getElementById('giftVideoPreviewContainer').style.display = 'none';
-            document.getElementById('giftVideoUpload').classList.remove('has-file');
-            document.getElementById('giftVideoFileInput').value = '';
+        function updateButtonPositions() {
+            const duaaBtn = document.getElementById('duaaBtn');
+            const notifBtn = document.getElementById('notifBtn');
+            
+            // Show duaa button if there are duaas
+            if (allDuaas.length > 0) {
+                duaaBtn.classList.add('visible');
+                notifBtn.classList.remove('position-no-duaa');
+                notifBtn.classList.add('position-with-duaa');
+            } else {
+                duaaBtn.classList.remove('visible');
+                notifBtn.classList.remove('position-with-duaa');
+                notifBtn.classList.add('position-no-duaa');
+            }
+        }
+
+        function applyWelcomeSettings() {
+            if (!welcomeSettings) return;
+            
+            if (welcomeSettings.icon) {
+                document.getElementById('welcomeIcon').textContent = welcomeSettings.icon;
+            }
+            if (welcomeSettings.title) {
+                document.getElementById('welcomeTitle').textContent = welcomeSettings.title;
+            }
+            if (welcomeSettings.message) {
+                document.getElementById('welcomeText').textContent = welcomeSettings.message;
+            }
+            
+            if (!welcomeSettings.hidden) {
+                setTimeout(() => {
+                    document.getElementById('welcomeOverlay').classList.add('active');
+                }, 500);
+            }
         }
 
         function showDemoMode() {
@@ -3386,28 +3041,19 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
 
         async function loadDays() {
             try {
-                // Load days with their part counts using a separate query
                 const { data: daysData, error: daysError } = await supabase
                     .from('days')
                     .select('*')
                     .order('day_number');
 
-                if (daysError) {
-                    console.error('Error loading days:', daysError.message, daysError);
-                    throw daysError;
-                }
+                if (daysError) throw daysError;
 
-                // For each day, count the parts
                 allDays = [];
                 for (const day of (daysData || [])) {
-                    const { count, error: countError } = await supabase
+                    const { count } = await supabase
                         .from('day_parts')
                         .select('*', { count: 'exact', head: true })
                         .eq('day_id', day.id);
-                    
-                    if (countError) {
-                        console.error('Error counting parts for day', day.day_number, ':', countError.message);
-                    }
                     
                     allDays.push({
                         ...day,
@@ -3415,16 +3061,9 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
                     });
                 }
 
-                console.log('Loaded', allDays.length, 'days');
                 renderDays();
             } catch (error) {
-                console.error('Error loading days:', error.message || error);
-                document.getElementById('daysContainer').innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">⚠️</div>
-                        <p>Error loading days. Please refresh.</p>
-                    </div>
-                `;
+                console.error('Error loading days:', error);
             }
         }
 
@@ -3432,17 +3071,15 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             const container = document.getElementById('daysContainer');
             const progressSection = document.getElementById('progressSection');
             
-            // Show progress section
             progressSection.style.display = 'block';
             updateProgress();
             
-            // Create grid for all days up to totalDays
             const grid = document.createElement('div');
             grid.className = 'days-grid';
             
             for (let i = 1; i <= totalDays; i++) {
                 const dayData = allDays.find(d => d.day_number === i);
-                const isUnlocked = dayData !== undefined; // Day is unlocked if it exists in database
+                const isUnlocked = dayData !== undefined;
                 const hasProgress = dayProgressNotes.has(i);
                 
                 const card = document.createElement('div');
@@ -3469,12 +3106,11 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             container.innerHTML = '';
             container.appendChild(grid);
             
-            // Check if all days created and trigger fireworks
             checkAndTriggerFireworks();
         }
 
         function updateProgress() {
-            const createdDays = allDays.length; // Count how many days exist in database
+            const createdDays = allDays.length;
             const percentage = totalDays > 0 ? Math.round((createdDays / totalDays) * 100) : 0;
 
             document.getElementById('progressBar').style.width = percentage + '%';
@@ -3482,307 +3118,119 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             document.getElementById('progressText').textContent = `${createdDays} of ${totalDays} days created`;
         }
 
-        function applyWelcomeSettings() {
-            if (!welcomeSettings) return;
+        // ============================================
+        // GIFT VIDEO FUNCTIONS
+        // ============================================
+        function playGiftVideo() {
+            if (!giftVideoUrl) return;
+
+            const overlay = document.getElementById('giftVideoOverlay');
+            const container = document.getElementById('giftVideoContainer');
+            const video = document.getElementById('giftVideo');
+            const playButton = document.getElementById('giftPlayButton');
+
+            video.src = giftVideoUrl;
+            video.muted = false;
+            video.load();
             
-            if (welcomeSettings.icon) {
-                document.getElementById('welcomeIcon').textContent = welcomeSettings.icon;
-            }
-            if (welcomeSettings.title) {
-                document.getElementById('welcomeTitle').textContent = welcomeSettings.title;
-            }
-            if (welcomeSettings.message) {
-                document.getElementById('welcomeText').textContent = welcomeSettings.message;
-            }
-            
-            if (!welcomeSettings.hidden) {
+            overlay.classList.add('active');
+            container.classList.remove('exit');
+            playButton.classList.remove('show');
+
+            video.play().then(() => {
+                playButton.classList.remove('show');
+            }).catch(() => {
+                playButton.classList.add('show');
+            });
+
+            video.onended = () => {
+                container.classList.add('exit');
                 setTimeout(() => {
-                    document.getElementById('welcomeOverlay').classList.add('active');
+                    overlay.classList.remove('active');
+                    video.pause();
+                    video.currentTime = 0;
                 }, 500);
-            }
+            };
+        }
+
+        function manualPlayGiftVideo() {
+            const video = document.getElementById('giftVideo');
+            const playButton = document.getElementById('giftPlayButton');
+            
+            video.muted = false;
+            video.play().then(() => {
+                playButton.classList.remove('show');
+            });
+        }
+
+        function closeGiftVideo() {
+            const overlay = document.getElementById('giftVideoOverlay');
+            const container = document.getElementById('giftVideoContainer');
+            const video = document.getElementById('giftVideo');
+
+            container.classList.add('exit');
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                video.pause();
+                video.currentTime = 0;
+            }, 500);
         }
 
         // ============================================
-        // FILE UPLOAD FUNCTIONS
+        // DUAA FUNCTIONS
         // ============================================
-        async function uploadImage(file, folder) {
-            if (!file) return null;
-            
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-            const filePath = `${folder}/${fileName}`;
-
-            try {
-                const { data, error } = await supabase.storage
-                    .from(STORAGE_BUCKET)
-                    .upload(filePath, file, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
-
-                if (error) throw error;
-
-                const { data: urlData } = supabase.storage
-                    .from(STORAGE_BUCKET)
-                    .getPublicUrl(filePath);
-
-                return urlData.publicUrl;
-            } catch (error) {
-                console.error('Upload error:', error);
-                throw error;
-            }
+        function openDuaaOverlay() {
+            const overlay = document.getElementById('duaaOverlay');
+            overlay.classList.add('active');
+            currentDuaaIndex = 0;
+            renderDuaa();
         }
 
-        function handleCharacterUpload(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const preview = document.getElementById('characterPreview');
-            const uploadArea = document.getElementById('characterUpload');
-            const progressBar = document.getElementById('characterProgressBar');
-            const progressContainer = document.getElementById('characterUploadProgress');
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.src = e.target.result;
-                preview.classList.add('active');
-                uploadArea.classList.add('has-file');
-            };
-            reader.readAsDataURL(file);
-
-            progressContainer.classList.add('active');
-            progressBar.style.width = '50%';
-
-            uploadImage(file, 'character')
-                .then(url => {
-                    document.getElementById('characterImageUrl').value = url;
-                    progressBar.style.width = '100%';
-                    setTimeout(() => {
-                        progressContainer.classList.remove('active');
-                        progressBar.style.width = '0%';
-                    }, 500);
-                })
-                .catch(err => {
-                    alert('Error uploading image: ' + err.message);
-                    progressContainer.classList.remove('active');
-                    progressBar.style.width = '0%';
-                });
+        function closeDuaaOverlay(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('duaaOverlay').classList.remove('active');
         }
 
-        function handlePartUpload(input, partId) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const preview = document.getElementById(`partPreview-${partId}`);
-            const uploadArea = document.getElementById(`partUpload-${partId}`);
-            const progressBar = document.getElementById(`partProgressBar-${partId}`);
-            const progressContainer = document.getElementById(`partUploadProgress-${partId}`);
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.src = e.target.result;
-                preview.classList.add('active');
-                uploadArea.classList.add('has-file');
-            };
-            reader.readAsDataURL(file);
-
-            progressContainer.classList.add('active');
-            progressBar.style.width = '50%';
-
-            uploadImage(file, 'day_parts')
-                .then(url => {
-                    uploadedFiles[partId] = url;
-                    document.getElementById(`partImageUrl-${partId}`).value = url;
-                    progressBar.style.width = '100%';
-                    setTimeout(() => {
-                        progressContainer.classList.remove('active');
-                        progressBar.style.width = '0%';
-                    }, 500);
-                })
-                .catch(err => {
-                    alert('Error uploading image: ' + err.message);
-                    progressContainer.classList.remove('active');
-                    progressBar.style.width = '0%';
-                });
-        }
-
-        function removePartImage(partId) {
-            const input = document.getElementById(`partFileInput-${partId}`);
-            if (input) input.value = '';
+        function renderDuaa() {
+            const content = document.getElementById('duaaContent');
             
-            const preview = document.getElementById(`partPreview-${partId}`);
-            if (preview) {
-                preview.src = '';
-                preview.classList.remove('active');
-            }
-            
-            const urlInput = document.getElementById(`partImageUrl-${partId}`);
-            if (urlInput) urlInput.value = '';
-            
-            const uploadArea = document.getElementById(`partUpload-${partId}`);
-            if (uploadArea) uploadArea.classList.remove('has-file');
-            
-            delete uploadedFiles[partId];
-        }
-
-        // Voice message functions
-        let uploadedVoices = {};
-        
-        async function handleVoiceUpload(input, partId) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const uploadArea = document.getElementById(`voiceUpload-${partId}`);
-            const progressBar = document.getElementById(`voiceProgressBar-${partId}`);
-            const progressContainer = document.getElementById(`voiceUploadProgress-${partId}`);
-
-            progressContainer.classList.add('active');
-            progressBar.style.width = '50%';
-
-            try {
-                const fileExt = file.name.split('.').pop();
-                const fileName = `voice-${Date.now()}.${fileExt}`;
-                const filePath = `day_parts/${fileName}`;
-
-                const { error: uploadError } = await supabase.storage
-                    .from('images')
-                    .upload(filePath, file);
-
-                if (uploadError) throw uploadError;
-
-                const { data: { publicUrl } } = supabase.storage
-                    .from('images')
-                    .getPublicUrl(filePath);
-
-                uploadedVoices[partId] = publicUrl;
-                document.getElementById(`partVoiceUrl-${partId}`).value = publicUrl;
-                
-                // Update UI with voice player
-                const previewHtml = `
-                    <div class="voice-preview-player" id="voicePreview-${partId}">
-                        <div class="voice-player">
-                            <button class="voice-play-btn" onclick="event.stopPropagation(); toggleVoicePreview(${partId})">
-                                <span id="voicePlayIcon-${partId}">▶️</span>
-                            </button>
-                            <div class="voice-progress-container">
-                                <div class="voice-progress-bar" onclick="event.stopPropagation(); seekVoicePreview(event, ${partId})">
-                                    <div class="voice-progress-fill" id="voiceProgressFill-${partId}"></div>
-                                </div>
-                                <div class="voice-time">
-                                    <span id="voiceCurrentTime-${partId}">0:00</span>
-                                    <span id="voiceDuration-${partId}">0:00</span>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="remove-voice-btn" onclick="event.stopPropagation(); removePartVoice(${partId})">Remove Voice</button>
-                        <audio id="voiceAudio-${partId}" src="${publicUrl}" style="display: none;"></audio>
+            if (allDuaas.length === 0) {
+                content.innerHTML = `
+                    <div class="duaa-empty">
+                        <div class="duaa-empty-icon">🌸</div>
+                        <p>No duaa added yet</p>
                     </div>
                 `;
-                
-                // Remove old preview if exists
-                const oldPreview = document.getElementById(`voicePreview-${partId}`);
-                if (oldPreview) oldPreview.remove();
-                
-                // Add new preview
-                uploadArea.insertAdjacentHTML('beforeend', previewHtml);
-                uploadArea.classList.add('has-file');
-                
-                // Initialize player
-                setTimeout(() => initVoicePlayer(partId), 100);
+                return;
+            }
+            
+            const duaa = allDuaas[currentDuaaIndex];
+            
+            content.innerHTML = `
+                <div class="duaa-content">
+                    <div class="duaa-text">${duaa.arabic_text || duaa.duaa_text}</div>
+                    ${duaa.translation ? `<div class="duaa-translation">${duaa.translation}</div>` : ''}
+                </div>
+                <div class="duaa-nav">
+                    <button class="duaa-nav-btn" onclick="prevDuaa()" ${currentDuaaIndex === 0 ? 'disabled' : ''}>← Previous</button>
+                    <span class="duaa-counter">${currentDuaaIndex + 1} / ${allDuaas.length}</span>
+                    <button class="duaa-nav-btn" onclick="nextDuaa()" ${currentDuaaIndex === allDuaas.length - 1 ? 'disabled' : ''}>Next →</button>
+                </div>
+            `;
+        }
 
-                progressBar.style.width = '100%';
-                setTimeout(() => {
-                    progressContainer.classList.remove('active');
-                    progressBar.style.width = '0%';
-                }, 500);
-            } catch (error) {
-                alert('Error uploading voice: ' + error.message);
-                progressContainer.classList.remove('active');
-                progressBar.style.width = '0%';
+        function nextDuaa() {
+            if (currentDuaaIndex < allDuaas.length - 1) {
+                currentDuaaIndex++;
+                renderDuaa();
             }
         }
 
-        function removePartVoice(partId) {
-            const input = document.getElementById(`voiceFileInput-${partId}`);
-            if (input) input.value = '';
-            
-            const urlInput = document.getElementById(`partVoiceUrl-${partId}`);
-            if (urlInput) urlInput.value = '';
-            
-            const preview = document.getElementById(`voicePreview-${partId}`);
-            if (preview) preview.remove();
-            
-            const uploadArea = document.getElementById(`voiceUpload-${partId}`);
-            if (uploadArea) uploadArea.classList.remove('has-file');
-            
-            delete uploadedVoices[partId];
-        }
-
-        function initVoicePlayer(partId) {
-            const audio = document.getElementById(`voiceAudio-${partId}`);
-            if (!audio) return;
-
-            audio.addEventListener('loadedmetadata', () => {
-                const duration = document.getElementById(`voiceDuration-${partId}`);
-                if (duration) duration.textContent = formatTime(audio.duration);
-            });
-
-            audio.addEventListener('timeupdate', () => {
-                const progressFill = document.getElementById(`voiceProgressFill-${partId}`);
-                const currentTime = document.getElementById(`voiceCurrentTime-${partId}`);
-                if (progressFill && audio.duration) {
-                    const progress = (audio.currentTime / audio.duration) * 100;
-                    progressFill.style.width = progress + '%';
-                }
-                if (currentTime) {
-                    currentTime.textContent = formatTime(audio.currentTime);
-                }
-            });
-
-            audio.addEventListener('ended', () => {
-                const playIcon = document.getElementById(`voicePlayIcon-${partId}`);
-                if (playIcon) playIcon.textContent = '▶️';
-            });
-        }
-
-        function toggleVoicePreview(partId) {
-            const audio = document.getElementById(`voiceAudio-${partId}`);
-            const playIcon = document.getElementById(`voicePlayIcon-${partId}`);
-            
-            if (!audio) return;
-
-            if (audio.paused) {
-                // Pause all other audio players
-                document.querySelectorAll('audio').forEach(a => {
-                    if (a !== audio) a.pause();
-                });
-                document.querySelectorAll('[id^="voicePlayIcon-"]').forEach(icon => {
-                    icon.textContent = '▶️';
-                });
-                
-                audio.play();
-                playIcon.textContent = '⏸️';
-            } else {
-                audio.pause();
-                playIcon.textContent = '▶️';
+        function prevDuaa() {
+            if (currentDuaaIndex > 0) {
+                currentDuaaIndex--;
+                renderDuaa();
             }
-        }
-
-        function seekVoicePreview(event, partId) {
-            const audio = document.getElementById(`voiceAudio-${partId}`);
-            const progressBar = event.currentTarget;
-            if (!audio || !progressBar) return;
-
-            const rect = progressBar.getBoundingClientRect();
-            const percent = (event.clientX - rect.left) / rect.width;
-            audio.currentTime = percent * audio.duration;
-        }
-
-        function formatTime(seconds) {
-            if (!seconds || isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
         // ============================================
@@ -3797,7 +3245,6 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
         // ============================================
         async function openDay(id, dayNumber) {
             try {
-                // First get the day
                 const { data: day, error: dayError } = await supabase
                     .from('days')
                     .select('*')
@@ -3806,7 +3253,6 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
 
                 if (dayError) throw dayError;
 
-                // Then get the parts separately
                 const { data: parts, error: partsError } = await supabase
                     .from('day_parts')
                     .select('*')
@@ -3823,21 +3269,10 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
                 currentDayNumber = dayNumber;
                 currentPart = 0;
                 
-                // Load progress note for this day
                 await loadProgressNote(dayNumber);
                 
-                // Remove active class from all buttons
-                document.querySelectorAll('.day-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
+                document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
                 
-                // Add active class to the clicked button
-                const clickedBtn = document.querySelector(`.day-btn[onclick*="openDay(${id}"]`);
-                if (clickedBtn) {
-                    clickedBtn.classList.add('active');
-                }
-                
-                // Reset views
                 document.getElementById('messagePartsContainer').classList.remove('hidden');
                 document.getElementById('stickyNoteContainer').classList.remove('active');
                 document.getElementById('progressNoteView').classList.remove('active');
@@ -3865,7 +3300,6 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             document.getElementById('messageContent').textContent = part.text;
             document.getElementById('partIndicator').textContent = `Part ${currentPart + 1} of ${totalParts}`;
             
-            // Handle image
             const imgEl = document.getElementById('messageImage');
             if (part.image_url) {
                 imgEl.src = part.image_url;
@@ -3874,26 +3308,24 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
                 imgEl.style.display = 'none';
             }
 
-            // Handle voice message
             const voiceContainer = document.getElementById('messageVoiceContainer');
             if (part.voice_url) {
-                const voiceId = 'msgVoice';
                 voiceContainer.innerHTML = `
                     <div class="voice-player">
                         <button class="voice-play-btn" onclick="toggleMessageVoice()">
-                            <span id="${voiceId}PlayIcon">▶️</span>
+                            <span id="msgVoicePlayIcon">▶️</span>
                         </button>
                         <div class="voice-progress-container">
                             <div class="voice-progress-bar" onclick="seekMessageVoice(event)">
-                                <div class="voice-progress-fill" id="${voiceId}ProgressFill"></div>
+                                <div class="voice-progress-fill" id="msgVoiceProgressFill"></div>
                             </div>
                             <div class="voice-time">
-                                <span id="${voiceId}CurrentTime">0:00</span>
-                                <span id="${voiceId}Duration">0:00</span>
+                                <span id="msgVoiceCurrentTime">0:00</span>
+                                <span id="msgVoiceDuration">0:00</span>
                             </div>
                         </div>
                     </div>
-                    <audio id="${voiceId}Audio" src="${part.voice_url}" style="display: none;"></audio>
+                    <audio id="msgVoiceAudio" src="${part.voice_url}" style="display: none;"></audio>
                 `;
                 voiceContainer.style.display = 'block';
                 setTimeout(() => initMessageVoicePlayer(), 100);
@@ -3975,7 +3407,6 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
         }
 
         function closeMessage() {
-            // Stop any playing audio
             const audio = document.getElementById('msgVoiceAudio');
             if (audio) {
                 audio.pause();
@@ -3984,11 +3415,8 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             
             document.getElementById('messageOverlay').classList.remove('active');
             document.getElementById('messageDisplay').classList.remove('active');
-            document.querySelectorAll('.day-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
             
-            // Reset progress view
             document.getElementById('messagePartsContainer').classList.remove('hidden');
             document.getElementById('stickyNoteContainer').classList.remove('active');
             document.getElementById('progressNoteView').classList.remove('active');
@@ -4001,6 +3429,13 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             currentProgressNote = null;
         }
 
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
         // ============================================
         // PROGRESS NOTE FUNCTIONS
         // ============================================
@@ -4010,25 +3445,20 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             const progressNoteView = document.getElementById('progressNoteView');
             const toggleBtn = document.getElementById('progressToggleBtn');
             
-            // If showing message parts, switch to progress
             if (!partsContainer.classList.contains('hidden')) {
-                // Check if progress note exists
                 if (currentProgressNote) {
-                    // Show existing progress note
                     document.getElementById('progressNoteContent').textContent = currentProgressNote;
                     partsContainer.classList.add('hidden');
                     progressNoteView.classList.add('active');
                     toggleBtn.classList.add('active');
                     toggleBtn.innerHTML = '💌 View Message';
                 } else {
-                    // Show sticky note editor for new progress
                     partsContainer.classList.add('hidden');
                     stickyNoteContainer.classList.add('active');
                     document.getElementById('progressTextarea').value = '';
                     toggleBtn.innerHTML = '💌 View Message';
                 }
             } else {
-                // Switch back to message parts
                 partsContainer.classList.remove('hidden');
                 stickyNoteContainer.classList.remove('active');
                 progressNoteView.classList.remove('active');
@@ -4056,7 +3486,6 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             }
 
             try {
-                // Save to database
                 const { error } = await supabase
                     .from('progress_notes')
                     .upsert({
@@ -4070,14 +3499,12 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
                 currentProgressNote = progressText;
                 dayProgressNotes.set(currentDayNumber, progressText);
                 
-                // Update UI
                 document.getElementById('stickyNoteContainer').classList.remove('active');
                 document.getElementById('progressNoteContent').textContent = progressText;
                 document.getElementById('progressNoteView').classList.add('active');
                 document.getElementById('progressToggleBtn').innerHTML = '💌 View Message';
                 document.getElementById('progressToggleBtn').classList.add('active');
                 
-                // Update day card indicator
                 await renderDays();
                 
                 alert('Progress saved! ✨ Keep up the great work, Aiko! 💪');
@@ -4152,11 +3579,9 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             }
         }
 
-
         // ============================================
         // NOTIFICATION MESSAGES FUNCTIONS
         // ============================================
-        
         async function loadMessages() {
             try {
                 const { data, error } = await supabase
@@ -4168,7 +3593,6 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
 
                 allMessages = data || [];
                 updateNotificationBadge();
-                renderMessagesInAdmin();
                 
                 console.log('Loaded', allMessages.length, 'messages');
             } catch (error) {
@@ -4180,25 +3604,17 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             const badge = document.getElementById('notifBadge');
             const btn = document.getElementById('notifBtn');
 
-            console.log('updateNotificationBadge called, allMessages.length:', allMessages.length);
-            console.log('Button visible class before:', btn.classList.contains('visible'));
-
             if (allMessages.length > 0) {
                 badge.textContent = allMessages.length;
                 badge.style.display = 'flex';
                 btn.classList.add('has-messages');
-                btn.classList.add('visible'); // Show the bell button
-                console.log('Bell shown - messages exist');
+                btn.classList.add('visible');
             } else {
                 badge.style.display = 'none';
                 btn.classList.remove('has-messages');
-                btn.classList.remove('visible'); // Hide the bell button
-                console.log('Bell hidden - no messages');
+                btn.classList.remove('visible');
             }
-
-            console.log('Button visible class after:', btn.classList.contains('visible'));
         }
-
 
         function toggleMessages() {
             const container = document.getElementById('messagesContainer');
@@ -4212,21 +3628,12 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             }
         }
 
-        // Delete all viewed messages from Supabase (view-once logic)
         async function deleteViewedMessages() {
-            console.log('deleteViewedMessages called, allMessages.length:', allMessages.length);
-
-            if (allMessages.length === 0) {
-                console.log('No messages to delete, returning early');
-                return;
-            }
+            if (allMessages.length === 0) return;
 
             try {
-                // Get all message IDs to delete
                 const messageIds = allMessages.map(msg => msg.id);
-                console.log('Deleting message IDs:', messageIds);
 
-                // Delete messages from Supabase
                 const { error } = await supabase
                     .from('messages')
                     .delete()
@@ -4237,15 +3644,8 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
                     return;
                 }
 
-                console.log('Viewed messages deleted successfully:', messageIds.length, 'messages');
-
-                // Clear local messages array
                 allMessages = [];
-                console.log('allMessages cleared, length now:', allMessages.length);
-
-                // Update UI
                 updateNotificationBadge();
-                renderMessagesInAdmin();
 
             } catch (error) {
                 console.error('Error in deleteViewedMessages:', error);
@@ -4287,7 +3687,6 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
         }
 
         function hideMessages() {
-            console.log('hideMessages called');
             const container = document.getElementById('messagesContainer');
             const bubbles = container.querySelectorAll('.message-bubble');
             
@@ -4299,96 +3698,10 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             
             setTimeout(() => {
                 container.classList.remove('active');
-                // Delete messages from Supabase after hiding (view-once logic)
-                console.log("Calling deleteViewedMessages from hideMessages");
                 deleteViewedMessages();
             }, bubbles.length * 50 + 300);
         }
 
-        async function sendMessage() {
-            const textarea = document.getElementById('newMessageText');
-            const messageText = textarea.value.trim();
-            
-            if (!messageText) {
-                alert('Please write a message! 💬');
-                return;
-            }
-
-            try {
-                const { error } = await supabase
-                    .from('messages')
-                    .insert({
-                        message_text: messageText
-                    });
-
-                if (error) throw error;
-
-                textarea.value = '';
-                await loadMessages();
-                alert('Message sent to Aiko! 💌');
-                
-            } catch (error) {
-                console.error('Error sending message:', error);
-                alert('Error sending message: ' + error.message);
-            }
-        }
-
-        async function deleteMessage(messageId) {
-            const confirmed = confirm('Delete this message?');
-            if (!confirmed) return;
-
-            try {
-                const { error } = await supabase
-                    .from('messages')
-                    .delete()
-                    .eq('id', messageId);
-
-                if (error) throw error;
-
-                await loadMessages();
-                
-                // Update messages display if open
-                if (messagesOpen) {
-                    displayMessages();
-                }
-                
-            } catch (error) {
-                console.error('Error deleting message:', error);
-                alert('Error deleting message: ' + error.message);
-            }
-        }
-
-        function renderMessagesInAdmin() {
-            const list = document.getElementById('messagesList');
-            
-            if (allMessages.length === 0) {
-                list.innerHTML = '<p style="color: var(--text-light); text-align: center; padding: 20px;">No messages yet</p>';
-                return;
-            }
-
-            list.innerHTML = allMessages.map(msg => {
-                const time = new Date(msg.created_at);
-                const timeStr = time.toLocaleString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric',
-                    hour: 'numeric', 
-                    minute: '2-digit'
-                });
-                
-                return `
-                    <div style="background: white; padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                            <span style="font-size: 12px; color: var(--text-light);">${timeStr}</span>
-                            <button onclick="deleteMessage(${msg.id})" style="background: #ff7675; color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px;">🗑️ Delete</button>
-                        </div>
-                        <p style="margin: 0; line-height: 1.5; color: var(--text-dark); white-space: pre-wrap;">${msg.message_text}</p>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Close messages when clicking outside
         document.addEventListener('click', (e) => {
             if (messagesOpen) {
                 const container = document.getElementById('messagesContainer');
@@ -4401,11 +3714,9 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             }
         });
 
-
         // ============================================
         // TO-DO LIST & GPA FUNCTIONS
         // ============================================
-        
         function openTodoModal() {
             document.getElementById('todoModalOverlay').classList.add('active');
             loadCurrentTodoList();
@@ -4485,12 +3796,10 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             try {
                 const today = new Date().toISOString().split('T')[0];
 
-                // If editing existing list, delete old one first
                 if (currentTodoList) {
                     await supabase.from('daily_todos').delete().eq('id', currentTodoList.id);
                 }
 
-                // Create new todo list
                 const { data: todoList, error: listError } = await supabase
                     .from('daily_todos')
                     .insert({
@@ -4502,7 +3811,6 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
 
                 if (listError) throw listError;
 
-                // Insert all tasks
                 const todoItems = tasks.map((task, index) => ({
                     todo_list_id: todoList.id,
                     task_text: task.trim(),
@@ -4540,7 +3848,6 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
 
             const items = currentTodoList.todo_items.sort((a, b) => a.task_order - b.task_order);
             
-            // Detect if text is RTL (Arabic, Hebrew, etc.)
             const isRTL = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(items[0].task_text);
             
             const html = items.map((item, index) => `
@@ -4570,12 +3877,10 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
 
                 if (error) throw error;
 
-                // Reload to update display
                 await loadCurrentTodoList();
                 await calculateGPA();
 
                 if (completed) {
-                    // Show encouragement
                     const encouragements = [
                         "Great job! ✨",
                         "You're crushing it! 💪",
@@ -4638,8 +3943,7 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             const confirmed = confirm('Start a new to-do list? This will save your current progress to GPA and create a fresh list! 🎯');
             if (!confirmed) return;
 
-            // Calculate and save GPA before starting new list
-            await calculateAndSaveGPA();
+            await calculateGPA();
             
             currentTodoList = null;
             showEditMode();
@@ -4648,14 +3952,8 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
             alert('New day, new goals! ✨ Let\'s do this, Aiko! 💪');
         }
 
-        async function calculateAndSaveGPA() {
-            // GPA is automatically calculated from database
-            await calculateGPA();
-        }
-
         async function calculateGPA() {
             try {
-                // Get all todo lists
                 const { data: allLists, error } = await supabase
                     .from('daily_todos')
                     .select('*, todo_items(*)');
@@ -4675,18 +3973,14 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
                 });
 
                 const incompleteTasks = totalTasks - completedTasks;
-
-                // Calculate GPA (0.0 to 4.0)
                 const completionRate = totalTasks > 0 ? completedTasks / totalTasks : 0;
                 const gpa = completionRate * 4.0;
 
-                // Update UI
                 document.getElementById('totalTasks').textContent = totalTasks;
                 document.getElementById('completedTasks').textContent = completedTasks;
                 document.getElementById('incompleteTasks').textContent = incompleteTasks;
                 document.getElementById('gpaText').textContent = gpa.toFixed(2);
 
-                // Update circle
                 updateGPACircle(gpa);
 
             } catch (error) {
@@ -4696,486 +3990,32 @@ Don't forget to drink water! 💧" style="min-height: 150px;"></textarea>
 
         function updateGPACircle(gpa) {
             const circle = document.getElementById('gpaCircle');
-            const circumference = 2 * Math.PI * 65; // radius = 65
+            const circumference = 2 * Math.PI * 65;
             const percentage = (gpa / 4.0) * 100;
             const offset = circumference - (percentage / 100) * circumference;
 
             circle.style.strokeDashoffset = offset;
 
-            // Color based on GPA
             let color;
             if (gpa >= 3.5) {
-                color = '#00b894'; // Green - Excellent
+                color = '#00b894';
             } else if (gpa >= 3.0) {
-                color = '#55efc4'; // Light Green - Good
+                color = '#55efc4';
             } else if (gpa >= 2.5) {
-                color = '#ffeaa7'; // Yellow - Fair
+                color = '#ffeaa7';
             } else if (gpa >= 2.0) {
-                color = '#fdcb6e'; // Orange - Needs work
+                color = '#fdcb6e';
             } else {
-                color = '#ff7675'; // Red - Need more effort
+                color = '#ff7675';
             }
 
             circle.style.stroke = color;
             document.getElementById('gpaText').style.color = color;
         }
 
-        // Load all todos on startup
         async function loadAllTodos() {
             await calculateGPA();
         }
-
-
-        // ============================================
-        // ADMIN FUNCTIONS
-        // ============================================
-        function openAdmin() {
-            document.getElementById('adminModal').classList.add('active');
-            document.getElementById('passwordScreen').style.display = 'block';
-            document.getElementById('adminPanelContent').style.display = 'none';
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('passwordError').style.display = 'none';
-        }
-
-        function closeAdmin() {
-            document.getElementById('adminModal').classList.remove('active');
-            editingDayId = null;
-            partCounter = 0;
-            uploadedFiles = {};
-        }
-
-        function checkPassword() {
-            const input = document.getElementById('passwordInput').value;
-            if (input === ADMIN_PASSWORD) {
-                document.getElementById('passwordScreen').style.display = 'none';
-                document.getElementById('adminPanelContent').style.display = 'block';
-                loadAdminData();
-            } else {
-                document.getElementById('passwordError').style.display = 'block';
-            }
-        }
-
-        async function loadAdminData() {
-            if (welcomeSettings) {
-                document.getElementById('welcomeIconInput').value = welcomeSettings.icon || '';
-                document.getElementById('welcomeTitleInput').value = welcomeSettings.title || '';
-                document.getElementById('welcomeTextInput').value = welcomeSettings.message || '';
-                
-                if (welcomeSettings.hidden) {
-                    document.getElementById('hideWelcomeToggle').classList.add('active');
-                    document.getElementById('toggleStatus').textContent = 'On';
-                }
-            }
-
-            try {
-                const { data } = await supabase.from('character').select('*').single();
-                if (data && data.image_url) {
-                    document.getElementById('characterImageUrl').value = data.image_url;
-                    document.getElementById('characterPreview').src = data.image_url;
-                    document.getElementById('characterPreview').classList.add('active');
-                    document.getElementById('characterUpload').classList.add('has-file');
-                }
-            } catch (e) {}
-
-            renderDaysList();
-
-            editingDayId = null;
-            document.getElementById('dayNumberInput').value = '';
-            document.getElementById('partsContainer').innerHTML = '';
-            partCounter = 0;
-            uploadedFiles = {};
-            addPart();
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-            
-            // Find and activate the clicked tab
-            const clickedTab = document.querySelector(`.admin-tab[onclick*="switchTab('${tab}')"]`);
-            if (clickedTab) {
-                clickedTab.classList.add('active');
-            }
-            document.getElementById(`tab-${tab}`).classList.add('active');
-            
-            // Load data for specific tabs
-            if (tab === 'settings') {
-                document.getElementById('totalDaysInput').value = totalDays;
-                loadGiftVideoPreview();
-            }
-        }
-
-        function loadGiftVideoPreview() {
-            const giftVideoUrl = document.getElementById('giftVideoUrl').value;
-            const preview = document.getElementById('giftVideoPreview');
-            const previewContainer = document.getElementById('giftVideoPreviewContainer');
-            const uploadArea = document.getElementById('giftVideoUpload');
-            
-            if (giftVideoUrl && preview && previewContainer) {
-                preview.src = giftVideoUrl;
-                previewContainer.style.display = 'block';
-                uploadArea.classList.add('has-file');
-            }
-        }
-
-        function toggleWelcome() {
-            const toggle = document.getElementById('hideWelcomeToggle');
-            const status = document.getElementById('toggleStatus');
-            toggle.classList.toggle('active');
-            status.textContent = toggle.classList.contains('active') ? 'On' : 'Off';
-        }
-
-        // ============================================
-        // ADMIN - WELCOME SETTINGS
-        // ============================================
-        async function saveWelcomeSettings() {
-            const settings = {
-                icon: document.getElementById('welcomeIconInput').value || '🌸',
-                title: document.getElementById('welcomeTitleInput').value || 'Hello Aiko!',
-                message: document.getElementById('welcomeTextInput').value || 'Welcome!',
-                hidden: document.getElementById('hideWelcomeToggle').classList.contains('active')
-            };
-
-            try {
-                const { error } = await supabase
-                    .from('welcome_settings')
-                    .upsert({ id: 1, ...settings });
-
-                if (error) throw error;
-
-                welcomeSettings = settings;
-                applyWelcomeSettings();
-                alert('Welcome settings saved! ✅');
-            } catch (error) {
-                console.error('Error saving welcome settings:', error);
-                alert('Error saving: ' + error.message);
-            }
-        }
-
-        // ============================================
-        // ADMIN - CHARACTER
-        // ============================================
-        async function saveCharacter() {
-            const imageUrl = document.getElementById('characterImageUrl').value;
-
-            try {
-                const { error } = await supabase
-                    .from('character')
-                    .upsert({ id: 1, image_url: imageUrl });
-
-                if (error) throw error;
-
-                if (imageUrl) {
-                    document.getElementById('characterContainer').innerHTML = 
-                        `<img src="${imageUrl}" alt="Character">`;
-                } else {
-                    document.getElementById('characterContainer').innerHTML = 
-                        `<span class="character-placeholder">🌟</span>`;
-                }
-                alert('Character saved! ✅');
-            } catch (error) {
-                console.error('Error saving character:', error);
-                alert('Error saving: ' + error.message);
-            }
-        }
-
-        // ============================================
-        // ADMIN - DAYS LIST
-        // ============================================
-        function renderDaysList() {
-            const container = document.getElementById('daysList');
-            
-            if (allDays.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-light);">No days created yet.</p>';
-                return;
-            }
-
-            container.innerHTML = allDays.map(day => `
-                <div class="day-item">
-                    <span class="day-info">Day ${day.day_number} - ${day.day_parts?.length || 0} parts</span>
-                    <div class="day-actions">
-                        <button class="day-edit" onclick="editDay(${day.id})">Edit</button>
-                        <button class="day-delete" onclick="deleteDay(${day.id})">Delete</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function editDay(id) {
-            try {
-                // Get day
-                const { data: day, error: dayError } = await supabase
-                    .from('days')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
-
-                if (dayError) throw dayError;
-
-                // Get parts
-                const { data: parts, error: partsError } = await supabase
-                    .from('day_parts')
-                    .select('*')
-                    .eq('day_id', id)
-                    .order('part_order');
-
-                if (partsError) throw partsError;
-
-                editingDayId = id;
-                document.getElementById('dayNumberInput').value = day.day_number;
-                
-                const container = document.getElementById('partsContainer');
-                container.innerHTML = '';
-                partCounter = 0;
-                uploadedFiles = {};
-                uploadedVoices = {};
-
-                if (parts && parts.length > 0) {
-                    parts.forEach(part => {
-                        addPart(part.text, part.image_url, part.voice_url);
-                    });
-                } else {
-                    addPart();
-                }
-
-                switchTab('add');
-            } catch (error) {
-                console.error('Error loading day for edit:', error);
-                alert('Error loading day: ' + error.message);
-            }
-        }
-
-        async function deleteDay(id) {
-            if (!confirm('Are you sure you want to delete this day?')) return;
-
-            try {
-                await supabase.from('day_parts').delete().eq('day_id', id);
-                await supabase.from('days').delete().eq('id', id);
-                
-                await loadDays();
-                renderDaysList();
-                alert('Day deleted! ✅');
-            } catch (error) {
-                console.error('Error deleting day:', error);
-                alert('Error deleting: ' + error.message);
-            }
-        }
-
-        // ============================================
-        // ADMIN - ADD/EDIT DAY
-        // ============================================
-        function addPart(text = '', imageUrl = '', voiceUrl = '') {
-            partCounter++;
-            const partId = partCounter;
-            const container = document.getElementById('partsContainer');
-            
-            const partDiv = document.createElement('div');
-            partDiv.className = 'part-item';
-            partDiv.id = `part-${partId}`;
-            partDiv.innerHTML = `
-                <div class="part-header">
-                    <span class="part-number">Part ${partId}</span>
-                    <button class="part-remove" onclick="removePart(${partId})">Remove</button>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Message Text</label>
-                    <textarea class="form-textarea part-text" placeholder="Enter your message...">${text}</textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Image (optional)</label>
-                    <div class="file-upload ${imageUrl ? 'has-file' : ''}" id="partUpload-${partId}">
-                        <input type="file" id="partFileInput-${partId}" accept="image/*" onchange="handlePartUpload(this, ${partId})">
-                        <div class="file-upload-icon">📷</div>
-                        <div class="file-upload-text">Click to upload an image<br><small>or drag and drop</small></div>
-                        <div class="image-preview-container">
-                            <img class="file-upload-preview ${imageUrl ? 'active' : ''}" id="partPreview-${partId}" src="${imageUrl || ''}">
-                            ${imageUrl ? `<button type="button" class="remove-image-btn" onclick="removePartImage(${partId})">&times;</button>` : ''}
-                        </div>
-                        <div class="upload-progress" id="partUploadProgress-${partId}">
-                            <div class="upload-progress-bar" id="partProgressBar-${partId}"></div>
-                        </div>
-                    </div>
-                    <input type="hidden" class="part-image-url" id="partImageUrl-${partId}" value="${imageUrl || ''}">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Voice Message (optional)</label>
-                    <div class="voice-upload-area ${voiceUrl ? 'has-file' : ''}" id="voiceUpload-${partId}" onclick="document.getElementById('voiceFileInput-${partId}').click()">
-                        <input type="file" id="voiceFileInput-${partId}" accept="audio/*" onchange="handleVoiceUpload(this, ${partId})" style="display: none;">
-                        <div class="voice-upload-icon">🎤</div>
-                        <div class="voice-upload-text">Click to upload a voice message<br><small>MP3, WAV, M4A, etc.</small></div>
-                        ${voiceUrl ? `
-                            <div class="voice-preview-player" id="voicePreview-${partId}">
-                                <div class="voice-player">
-                                    <button class="voice-play-btn" onclick="event.stopPropagation(); toggleVoicePreview(${partId})">
-                                        <span id="voicePlayIcon-${partId}">▶️</span>
-                                    </button>
-                                    <div class="voice-progress-container">
-                                        <div class="voice-progress-bar" onclick="event.stopPropagation(); seekVoicePreview(event, ${partId})">
-                                            <div class="voice-progress-fill" id="voiceProgressFill-${partId}"></div>
-                                        </div>
-                                        <div class="voice-time">
-                                            <span id="voiceCurrentTime-${partId}">0:00</span>
-                                            <span id="voiceDuration-${partId}">0:00</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="remove-voice-btn" onclick="event.stopPropagation(); removePartVoice(${partId})">Remove Voice</button>
-                                <audio id="voiceAudio-${partId}" src="${voiceUrl}" style="display: none;"></audio>
-                            </div>
-                        ` : ''}
-                        <div class="upload-progress" id="voiceUploadProgress-${partId}">
-                            <div class="upload-progress-bar" id="voiceProgressBar-${partId}"></div>
-                        </div>
-                    </div>
-                    <input type="hidden" class="part-voice-url" id="partVoiceUrl-${partId}" value="${voiceUrl || ''}">
-                </div>
-            `;
-            
-            container.appendChild(partDiv);
-            
-            // Initialize audio if voice URL exists
-            if (voiceUrl) {
-                setTimeout(() => initVoicePlayer(partId), 100);
-            }
-        }
-
-        function removePart(id) {
-            const part = document.getElementById(`part-${id}`);
-            if (part) {
-                part.remove();
-                delete uploadedFiles[id];
-                const parts = document.querySelectorAll('.part-item');
-                parts.forEach((p, index) => {
-                    p.querySelector('.part-number').textContent = `Part ${index + 1}`;
-                });
-                partCounter = parts.length;
-            }
-        }
-
-        async function saveDay() {
-            const dayNumber = parseInt(document.getElementById('dayNumberInput').value);
-            if (!dayNumber || dayNumber < 1) {
-                alert('Please enter a valid day number (minimum 1)');
-                return;
-            }
-
-            const btn = document.getElementById('saveDayBtn');
-            btn.disabled = true;
-            btn.textContent = 'Saving...';
-
-            try {
-                // Collect parts
-                const parts = [];
-                document.querySelectorAll('.part-item').forEach((partEl, index) => {
-                    const text = partEl.querySelector('.part-text').value.trim();
-                    const imageUrl = partEl.querySelector('.part-image-url').value.trim();
-                    const voiceUrl = partEl.querySelector('.part-voice-url').value.trim();
-                    if (text) {
-                        parts.push({ 
-                            text, 
-                            image_url: imageUrl || null,
-                            voice_url: voiceUrl || null,
-                            part_order: index 
-                        });
-                    }
-                });
-
-                if (parts.length === 0) {
-                    alert('Please add at least one message part');
-                    btn.disabled = false;
-                    btn.textContent = 'Save Day';
-                    return;
-                }
-
-                let dayId = editingDayId;
-
-                if (editingDayId) {
-                    // Update existing day
-                    const { error: updateError } = await supabase
-                        .from('days')
-                        .update({ day_number: dayNumber })
-                        .eq('id', editingDayId);
-                    
-                    if (updateError) throw updateError;
-                    
-                    // Delete old parts
-                    const { error: deleteError } = await supabase
-                        .from('day_parts')
-                        .delete()
-                        .eq('day_id', editingDayId);
-                    
-                    if (deleteError) throw deleteError;
-                } else {
-                    // Check if day number already exists
-                    const existing = allDays.find(d => d.day_number === dayNumber);
-                    if (existing) {
-                        alert(`Day ${dayNumber} already exists! Please edit it instead.`);
-                        btn.disabled = false;
-                        btn.textContent = 'Save Day';
-                        return;
-                    }
-
-                    // Create new day
-                    const { data, error: insertError } = await supabase
-                        .from('days')
-                        .insert({ day_number: dayNumber })
-                        .select()
-                        .single();
-                    
-                    if (insertError) throw insertError;
-                    dayId = data.id;
-                }
-
-                // Insert parts
-                const partsToInsert = parts.map(p => ({
-                    day_id: dayId,
-                    text: p.text,
-                    image_url: p.image_url,
-                    voice_url: p.voice_url,
-                    part_order: p.part_order
-                }));
-
-                const { error: partsError } = await supabase
-                    .from('day_parts')
-                    .insert(partsToInsert);
-
-                if (partsError) throw partsError;
-
-                // Reload
-                await loadDays();
-                renderDaysList();
-                
-                // Reset form
-                editingDayId = null;
-                document.getElementById('dayNumberInput').value = '';
-                document.getElementById('partsContainer').innerHTML = '';
-                partCounter = 0;
-                uploadedFiles = {};
-                addPart();
-
-                alert(`Day ${dayNumber} saved! ✅`);
-                switchTab('days');
-
-            } catch (error) {
-                console.error('Error saving day:', error);
-                alert('Error saving: ' + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Save Day';
-            }
-        }
-
-        // Close modal on outside click
-        document.getElementById('adminModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('adminModal')) {
-                closeAdmin();
-            }
-        });
-
-        // Enter key on password
-        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') checkPassword();
-        });
     </script>
 </body>
-    </html>
+</html>

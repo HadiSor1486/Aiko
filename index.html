@@ -346,119 +346,6 @@
             animation: none;
         }
 
-        /* Study Timer Button - Below Todo */
-        .study-timer-btn {
-            position: fixed;
-            top: 80px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            background: linear-gradient(135deg, #ffb7d5, #ff9ecd);
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 100;
-            transition: all 0.3s ease;
-            opacity: 0.9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(255, 158, 205, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
-            animation: studyTimerPulse 2.5s ease-in-out infinite;
-        }
-
-        @keyframes studyTimerPulse {
-            0%, 100% {
-                transform: scale(1);
-                box-shadow: 0 4px 15px rgba(255, 158, 205, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
-            }
-            50% {
-                transform: scale(1.05);
-                box-shadow: 0 6px 20px rgba(255, 158, 205, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.5);
-            }
-        }
-
-        .study-timer-btn:hover {
-            opacity: 1;
-            transform: scale(1.15);
-            animation: none;
-        }
-
-        /* Countdown Clock in Todo Modal */
-        .countdown-clock {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: linear-gradient(135deg, rgba(255, 158, 205, 0.1), rgba(168, 216, 234, 0.1));
-            border-radius: 20px;
-            border: 2px solid var(--primary-light);
-        }
-
-        .countdown-label {
-            font-size: 12px;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-
-        .countdown-display {
-            font-size: 32px;
-            font-weight: 300;
-            color: var(--primary-dark);
-            font-family: 'Quicksand', monospace;
-            letter-spacing: 3px;
-        }
-
-        .countdown-display.expired {
-            color: #ff7675;
-            animation: expiredPulse 1s ease-in-out infinite;
-        }
-
-        @keyframes expiredPulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
-        }
-
-        .countdown-expired-msg {
-            font-size: 14px;
-            color: #ff7675;
-            margin-top: 5px;
-            font-weight: 600;
-        }
-
-        /* Deadline Banner */
-        .deadline-banner {
-            background: linear-gradient(135deg, #fff5f5, #ffe8e8);
-            border: 2px solid #ff7675;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-            animation: deadlinePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes deadlinePulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 118, 117, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(255, 118, 117, 0); }
-        }
-
-        .deadline-text {
-            font-size: 14px;
-            color: #d63031;
-            font-weight: 600;
-        }
-
-        .deadline-timer {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ff7675;
-            margin-top: 5px;
-            font-family: 'Quicksand', monospace;
-        }
-
         /* Gift Button - Top Right */
         .gift-btn {
             position: fixed;
@@ -1045,7 +932,7 @@
                 font-size: 16px;
             }
 
-            .gift-btn, .duaa-btn, .todo-btn, .notif-btn, .study-timer-btn {
+            .gift-btn, .duaa-btn, .todo-btn, .notif-btn {
                 width: 45px;
                 height: 45px;
                 font-size: 20px;
@@ -1053,11 +940,6 @@
 
             .todo-btn {
                 top: 15px;
-                left: 15px;
-            }
-
-            .study-timer-btn {
-                top: 70px;
                 left: 15px;
             }
 
@@ -2430,9 +2312,6 @@
     <!-- To-Do List Button - Top Left -->
     <button class="todo-btn" onclick="openTodoModal()" title="To-Do List & GPA">✅</button>
 
-    <!-- Study Timer Button - Below Todo -->
-    <button class="study-timer-btn" onclick="openStudyTimer()" title="Study Timer">⏰</button>
-
     <!-- Gift Button - Top Right -->
     <button class="gift-btn" onclick="playGiftVideo()" title="Special Gift" id="giftBtn">🎁</button>
 
@@ -2473,12 +2352,6 @@
             <div class="todo-modal-header">
                 <h2 class="todo-modal-title">📚 Study Tracker & GPA</h2>
                 <button class="todo-modal-close" onclick="closeTodoModal()">&times;</button>
-            </div>
-
-            <!-- 24-Hour Deadline Countdown -->
-            <div class="deadline-banner" id="deadlineBanner" style="display: none;">
-                <div class="deadline-text">⏰ Complete your tasks before time runs out!</div>
-                <div class="deadline-timer" id="deadlineTimer">24:00:00</div>
             </div>
 
             <!-- GPA Display -->
@@ -2754,115 +2627,6 @@ Example:
                 sparkle.style.animationDelay = Math.random() * 4 + 's';
                 sparkle.style.animationDuration = (3 + Math.random() * 2) + 's';
                 container.appendChild(sparkle);
-            }
-        }
-
-        // ============================================
-        // STUDY TIMER BUTTON - OPEN CLOCK PAGE
-        // ============================================
-        function openStudyTimer() {
-            window.open('clock.html', '_blank');
-        }
-
-        // ============================================
-        // 24-HOUR DEADLINE COUNTDOWN
-        // ============================================
-        let todoDeadlineEndTime = null;
-        let todoDeadlineInterval = null;
-
-        function startDeadlineTimer() {
-            if (!todoDeadlineEndTime) return;
-
-            if (todoDeadlineInterval) clearInterval(todoDeadlineInterval);
-
-            const banner = document.getElementById('deadlineBanner');
-            const timer = document.getElementById('deadlineTimer');
-            banner.style.display = 'block';
-
-            updateDeadlineDisplay();
-            todoDeadlineInterval = setInterval(updateDeadlineDisplay, 1000);
-        }
-
-        function updateDeadlineDisplay() {
-            if (!todoDeadlineEndTime) return;
-
-            const now = new Date();
-            const diff = todoDeadlineEndTime - now;
-            const banner = document.getElementById('deadlineBanner');
-            const timer = document.getElementById('deadlineTimer');
-
-            if (diff <= 0) {
-                clearInterval(todoDeadlineInterval);
-                timer.textContent = '00:00:00';
-                banner.style.borderColor = '#d63031';
-                banner.style.background = 'linear-gradient(135deg, #ffe8e8, #ffd5d5)';
-                return;
-            }
-
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-            // Change color based on urgency
-            if (hours < 1) {
-                timer.style.color = '#ff7675';
-            } else if (hours < 6) {
-                timer.style.color = '#fdcb6e';
-            } else {
-                timer.style.color = '#00b894';
-            }
-        }
-
-        async function handleExpiredTodoList(expiredList) {
-            try {
-                // Calculate current GPA before reset
-                const completedCount = expiredList.todo_items ? 
-                    expiredList.todo_items.filter(item => item.completed).length : 0;
-                const totalCount = expiredList.todo_items ? expiredList.todo_items.length : 0;
-                const completionRate = totalCount > 0 ? completedCount / totalCount : 0;
-                const gpa = completionRate * 4.0;
-
-                // Save GPA to history
-                const { error: historyError } = await supabase.from('gpa_history').insert({
-                    date: expiredList.date,
-                    gpa: gpa,
-                    total_tasks: totalCount,
-                    completed_tasks: completedCount,
-                    reset_reason: '24h deadline expired'
-                });
-
-                if (historyError) {
-                    console.error('Error saving GPA history:', historyError);
-                }
-
-                // Delete the expired todo items first (foreign key constraint)
-                const { error: itemsError } = await supabase
-                    .from('todo_items')
-                    .delete()
-                    .eq('todo_list_id', expiredList.id);
-
-                if (itemsError) {
-                    console.error('Error deleting todo items:', itemsError);
-                }
-
-                // Delete the expired todo list
-                const { error: listError } = await supabase
-                    .from('daily_todos')
-                    .delete()
-                    .eq('id', expiredList.id);
-
-                if (listError) {
-                    console.error('Error deleting todo list:', listError);
-                }
-
-                alert('⏰ Your 24-hour deadline has expired! Your GPA (' + gpa.toFixed(2) + ') has been saved. Start fresh with a new list! ✨');
-
-                // Recalculate GPA to include the expired list
-                await calculateGPA();
-            } catch (error) {
-                console.error('Error handling expired todo list:', error);
             }
         }
 
@@ -4081,13 +3845,6 @@ Example:
 
         function closeTodoModal() {
             document.getElementById('todoModalOverlay').classList.remove('active');
-            // Stop deadline timer when modal closes
-            if (todoDeadlineInterval) {
-                clearInterval(todoDeadlineInterval);
-                todoDeadlineInterval = null;
-            }
-            // Hide deadline banner
-            document.getElementById('deadlineBanner').style.display = 'none';
         }
 
         async function loadCurrentTodoList() {
@@ -4106,36 +3863,12 @@ Example:
                     console.error('Error loading todo list:', error);
                 }
 
-                // Hide deadline banner by default
-                document.getElementById('deadlineBanner').style.display = 'none';
-
                 if (data) {
                     currentTodoList = data;
-
-                    // Calculate deadline (24 hours from creation)
-                    const createdAt = new Date(data.created_at);
-                    todoDeadlineEndTime = new Date(createdAt.getTime() + 24 * 60 * 60 * 1000);
-
-                    // Check if deadline has expired
-                    const now = new Date();
-                    if (now > todoDeadlineEndTime) {
-                        // Deadline expired - handle it
-                        await handleExpiredTodoList(data);
-                        // After handling, show edit mode for new list
-                        currentTodoList = null;
-                        todoDeadlineEndTime = null;
-                        showEditMode();
-                        // Keep banner hidden - no active list
-                    } else {
-                        // Deadline still active - show list and start timer
-                        displayTodoList();
-                        startDeadlineTimer();
-                    }
+                    displayTodoList();
                 } else {
                     currentTodoList = null;
-                    todoDeadlineEndTime = null;
                     showEditMode();
-                    // Banner stays hidden - no active list
                 }
             } catch (error) {
                 console.error('Error:', error);

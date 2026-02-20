@@ -933,7 +933,111 @@
             background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 5 L25 15 L35 15 L27 22 L30 32 L20 26 L10 32 L13 22 L5 15 L15 15 Z' fill='none' stroke='%23ff9ecd' stroke-width='1'/%3E%3C/svg%3E");
         }
 
-        /* Mobile responsive */
+        /* Tablet responsive (481px - 768px) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .todo-btn {
+                top: 25px;
+                left: 25px;
+                width: 55px;
+                height: 55px;
+                font-size: 26px;
+            }
+
+            .study-timer-btn {
+                top: 90px;
+                left: 25px;
+                width: 55px;
+                height: 55px;
+                font-size: 26px;
+            }
+
+            .gift-btn {
+                top: 25px;
+                right: 25px;
+                width: 55px;
+                height: 55px;
+                font-size: 26px;
+            }
+
+            .duaa-btn {
+                top: 90px;
+                right: 25px;
+                width: 55px;
+                height: 55px;
+                font-size: 26px;
+            }
+
+            .notif-btn.position-with-duaa {
+                top: 155px;
+            }
+
+            .notif-btn.position-no-duaa {
+                top: 90px;
+            }
+
+            .messages-container {
+                top: 220px;
+                right: 90px;
+                width: 300px;
+            }
+        }
+
+        /* Desktop/Laptop responsive (769px and above) */
+        @media (min-width: 769px) {
+            .todo-btn {
+                top: 30px;
+                left: 30px;
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .study-timer-btn {
+                top: 100px;
+                left: 30px;
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .gift-btn {
+                top: 30px;
+                right: 30px;
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .duaa-btn {
+                top: 100px;
+                right: 30px;
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .notif-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .notif-btn.position-with-duaa {
+                top: 170px;
+            }
+
+            .notif-btn.position-no-duaa {
+                top: 100px;
+            }
+
+            .messages-container {
+                top: 240px;
+                right: 100px;
+                width: 320px;
+            }
+        }
+
+        /* Mobile responsive (480px and below) */
         @media (max-width: 480px) {
             .messages-container {
                 width: calc(100vw - 100px);
@@ -972,7 +1076,7 @@
                 font-size: 16px;
             }
 
-            .gift-btn, .duaa-btn, .todo-btn, .notif-btn {
+            .gift-btn, .duaa-btn, .todo-btn, .notif-btn, .study-timer-btn {
                 width: 45px;
                 height: 45px;
                 font-size: 20px;
@@ -983,22 +1087,27 @@
                 left: 15px;
             }
 
+            .study-timer-btn {
+                top: 65px;
+                left: 15px;
+            }
+
             .gift-btn {
                 top: 15px;
                 right: 15px;
             }
 
             .duaa-btn {
-                top: 70px;
+                top: 65px;
                 right: 15px;
             }
 
             .notif-btn.position-with-duaa {
-                top: 120px;
+                top: 115px;
             }
 
             .notif-btn.position-no-duaa {
-                top: 70px;
+                top: 65px;
             }
         }
 
@@ -2326,7 +2435,7 @@
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
         }
-    </style>
+                </style>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>

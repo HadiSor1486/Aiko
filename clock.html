@@ -1,0 +1,2509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aiko's Study Clock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Nunito:wght@300;400;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Dancing+Script:wght@400;500;600;700&family=Press+Start+2P&family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+    <style>
+        :root {
+            --primary: #ff9ecd;
+            --primary-light: #ffc4e1;
+            --primary-dark: #ff7eb8;
+            --secondary: #a8d8ea;
+            --secondary-light: #c5f0f7;
+            --accent: #ffd93d;
+            --accent-light: #fff0a3;
+            --bg-gradient-start: #fff5f8;
+            --bg-gradient-end: #e8f4f8;
+            --text-dark: #5a4a5a;
+            --text-light: #8a7a8a;
+            --white: #ffffff;
+            --shadow: rgba(255, 158, 205, 0.25);
+            --shadow-soft: rgba(0, 0, 0, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --clock-font: 'Quicksand', sans-serif;
+        }
+
+        /* Theme Variants */
+        body.theme-lavender {
+            --primary: #c8b6ff;
+            --primary-light: #e0d4ff;
+            --primary-dark: #a78bfa;
+            --secondary: #d8b4fe;
+            --secondary-light: #f0e6ff;
+            --bg-gradient-start: #f5f0ff;
+            --bg-gradient-end: #ede4ff;
+        }
+
+        body.theme-mint {
+            --primary: #a7f3d0;
+            --primary-light: #d1fae5;
+            --primary-dark: #6ee7b7;
+            --secondary: #99f6e4;
+            --secondary-light: #ccfbf1;
+            --bg-gradient-start: #f0fdf4;
+            --bg-gradient-end: #e0f2fe;
+        }
+
+        body.theme-peach {
+            --primary: #fdba74;
+            --primary-light: #fed7aa;
+            --primary-dark: #fb923c;
+            --secondary: #fca5a5;
+            --secondary-light: #fee2e2;
+            --bg-gradient-start: #fff7ed;
+            --bg-gradient-end: #fef2f2;
+        }
+
+        body.theme-rose {
+            --primary: #fda4af;
+            --primary-light: #fecdd3;
+            --primary-dark: #fb7185;
+            --secondary: #f9a8d4;
+            --secondary-light: #fce7f3;
+            --bg-gradient-start: #fff1f2;
+            --bg-gradient-end: #fdf2f8;
+        }
+
+        body.theme-sky {
+            --primary: #7dd3fc;
+            --primary-light: #bae6fd;
+            --primary-dark: #38bdf8;
+            --secondary: #a5f3fc;
+            --secondary-light: #cffafe;
+            --bg-gradient-start: #f0f9ff;
+            --bg-gradient-end: #ecfeff;
+        }
+
+        body.theme-cream {
+            --primary: #e9d5ff;
+            --primary-light: #f3e8ff;
+            --primary-dark: #d8b4fe;
+            --secondary: #fde68a;
+            --secondary-light: #fef3c7;
+            --bg-gradient-start: #fffbeb;
+            --bg-gradient-end: #faf5ff;
+        }
+
+        body.theme-blush {
+            --primary: #f9a8d4;
+            --primary-light: #fbcfe8;
+            --primary-dark: #f472b6;
+            --secondary: #c4b5fd;
+            --secondary-light: #ddd6fe;
+            --bg-gradient-start: #fdf2f8;
+            --bg-gradient-end: #f5f3ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Quicksand', 'Nunito', sans-serif;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 50%, var(--bg-gradient-start) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            z-index: -3;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Full Screen Background Image - CLEARER */
+        .custom-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .custom-bg.active {
+            opacity: 0.85;
+        }
+
+        .custom-bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .custom-bg.active ~ .custom-bg-overlay {
+            opacity: 0.25;
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .float-item {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 25s infinite ease-in-out;
+        }
+
+        .float-item.star {
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .float-item.circle {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--secondary);
+        }
+
+        .float-item.heart {
+            width: 16px;
+            height: 14px;
+            background: var(--primary);
+            transform: rotate(-45deg);
+        }
+
+        .float-item.heart::before,
+        .float-item.heart::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 14px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .float-item.heart::before {
+            top: -8px;
+            left: 0;
+        }
+
+        .float-item.heart::after {
+            left: 8px;
+            top: 0;
+        }
+
+        .float-item.diamond {
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            transform: rotate(45deg);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            5% { opacity: 0.1; }
+            95% { opacity: 0.1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main Container */
+        .container {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px 30px;
+            position: relative;
+            z-index: 1;
+            gap: 25px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            z-index: 100;
+        }
+
+        /* Back Button */
+        .back-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .back-btn:hover {
+            transform: scale(1.1) translateX(-3px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .back-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        /* Top Right Buttons */
+        .top-right-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px var(--shadow-soft);
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .icon-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+
+        /* Focus Mode Exit Button */
+        .focus-exit-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.8);
+        }
+
+        .focus-exit-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        .focus-exit-btn:hover {
+            transform: scale(1.1);
+            background: white;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .focus-exit-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            max-width: 95vw;
+            height: 100vh;
+            height: 100dvh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(30px);
+            z-index: 200;
+            transition: right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 25px;
+            overflow-y: auto;
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .settings-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .settings-close {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-close:hover {
+            background: var(--primary);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .settings-section {
+            margin-bottom: 28px;
+        }
+
+        .settings-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+        }
+
+        /* Theme Selector */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .theme-option {
+            aspect-ratio: 1;
+            border-radius: 14px;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-option::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .theme-option:hover {
+            transform: scale(1.05);
+        }
+
+        .theme-option:hover::after {
+            opacity: 1;
+        }
+
+        .theme-option.active {
+            border-color: var(--text-dark);
+            transform: scale(1.08);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-option.pink { background: linear-gradient(135deg, #ffc4e1, #ff9ecd); }
+        .theme-option.lavender { background: linear-gradient(135deg, #e0d4ff, #c8b6ff); }
+        .theme-option.mint { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+        .theme-option.peach { background: linear-gradient(135deg, #fed7aa, #fdba74); }
+        .theme-option.rose { background: linear-gradient(135deg, #fecdd3, #fda4af); }
+        .theme-option.sky { background: linear-gradient(135deg, #bae6fd, #7dd3fc); }
+        .theme-option.cream { background: linear-gradient(135deg, #f3e8ff, #e9d5ff); }
+        .theme-option.blush { background: linear-gradient(135deg, #fbcfe8, #f9a8d4); }
+
+        /* Clock Style Selector */
+        .clock-style-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .clock-style-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .clock-style-option:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateX(5px);
+        }
+
+        .clock-style-option.active {
+            border-color: var(--primary);
+            background: rgba(255, 158, 205, 0.1);
+        }
+
+        .clock-style-preview {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .clock-style-preview.elegant { font-family: 'Playfair Display', serif; }
+        .clock-style-preview.modern { font-family: 'Montserrat', sans-serif; }
+        .clock-style-preview.pixel { font-family: 'Press Start 2P', cursive; font-size: 12px; }
+        .clock-style-preview.handwritten { font-family: 'Dancing Script', cursive; }
+        .clock-style-preview.classic { font-family: 'Cinzel', serif; }
+        .clock-style-preview.minimal { font-family: 'Space Mono', monospace; }
+
+        .clock-style-info {
+            flex: 1;
+        }
+
+        .clock-style-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 13px;
+        }
+
+        .clock-style-desc {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        /* File Upload */
+        .upload-area {
+            border: 2px dashed var(--primary-light);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .upload-area.has-image {
+            border-color: #00b894;
+            background: rgba(0, 184, 148, 0.1);
+        }
+
+        .upload-icon {
+            width: 45px;
+            height: 45px;
+            margin: 0 auto 10px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover .upload-icon {
+            transform: scale(1.1);
+        }
+
+        .upload-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--primary-dark);
+        }
+
+        .upload-text {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        .remove-bg-btn {
+            margin-top: 10px;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 20px;
+            background: #ff7675;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-bg-btn:hover {
+            background: #d63031;
+            transform: scale(1.05);
+        }
+
+        /* Background Mode Toggle */
+        .bg-mode-toggle {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .bg-mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--primary-light);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text-dark);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .bg-mode-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .bg-mode-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Ringtone Selector */
+        .ringtone-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ringtone-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .ringtone-option:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .ringtone-option.active {
+            border-color: var(--primary);
+            background: rgba(255, 158, 205, 0.1);
+        }
+
+        .ringtone-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .ringtone-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--primary-dark);
+        }
+
+        .ringtone-info {
+            flex: 1;
+        }
+
+        .ringtone-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 13px;
+        }
+
+        .ringtone-preview {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .ringtone-play {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .ringtone-play:hover {
+            transform: scale(1.1);
+        }
+
+        .ringtone-play svg {
+            width: 12px;
+            height: 12px;
+            fill: currentColor;
+            margin-left: 2px;
+        }
+
+        /* Custom Ringtone Upload */
+        .custom-ringtone-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--primary-light);
+        }
+
+        .custom-ringtone-upload {
+            border: 2px dashed var(--primary-light);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .custom-ringtone-upload:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .custom-ringtone-upload.has-file {
+            border-color: #00b894;
+            background: rgba(0, 184, 148, 0.1);
+        }
+
+        .custom-ringtone-name {
+            font-size: 11px;
+            color: var(--text-dark);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* Volume Slider */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .volume-icon {
+            width: 22px;
+            height: 22px;
+            fill: var(--text-light);
+            flex-shrink: 0;
+        }
+
+        .volume-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 10px;
+            background: var(--primary-light);
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            cursor: pointer;
+            box-shadow: 0 2px 10px var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .volume-value {
+            font-weight: 700;
+            color: var(--primary-dark);
+            min-width: 40px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        /* Settings Overlay */
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .settings-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Timer Display - RESPONSIVE */
+        .timer-container {
+            text-align: center;
+            padding: 30px 50px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 35px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .timer-greeting {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .timer-display {
+            font-size: clamp(50px, 15vw, 140px);
+            font-weight: 300;
+            color: var(--text-dark);
+            font-family: var(--clock-font);
+            letter-spacing: 6px;
+            line-height: 1;
+            text-shadow: 0 0 50px rgba(255, 158, 205, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .timer-display.running {
+            animation: timerPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { text-shadow: 0 0 50px rgba(255, 158, 205, 0.4); }
+            50% { text-shadow: 0 0 80px rgba(255, 158, 205, 0.6); }
+        }
+
+        .timer-display.finished {
+            color: #ff7675;
+            animation: timerFinished 0.6s ease-in-out infinite;
+        }
+
+        @keyframes timerFinished {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .timer-labels {
+            display: flex;
+            justify-content: center;
+            gap: clamp(30px, 8vw, 70px);
+            margin-top: 12px;
+        }
+
+        .timer-label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Timer Input */
+        .timer-input-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .time-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .time-input {
+            width: 85px;
+            height: 85px;
+            border-radius: 22px;
+            border: 3px solid var(--primary-light);
+            background: rgba(255, 255, 255, 0.85);
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            font-family: var(--clock-font);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .time-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 25px var(--shadow);
+            transform: scale(1.05);
+            background: white;
+        }
+
+        .time-input-label {
+            font-size: 11px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Quick Time Buttons */
+        .quick-times {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-time-btn {
+            padding: 12px 22px;
+            border-radius: 22px;
+            border: 2px solid var(--primary-light);
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-dark);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: inherit;
+        }
+
+        .quick-time-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px var(--shadow);
+        }
+
+        .quick-time-btn.pomodoro {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-color: transparent;
+            color: white;
+        }
+
+        /* Control Buttons - ENHANCED */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .control-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .control-btn:hover::before {
+            opacity: 1;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.12) translateY(-3px);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .control-btn:hover svg {
+            transform: scale(1.1);
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #00d2a0, #00c9b7);
+            box-shadow: 0 8px 25px rgba(0, 210, 160, 0.4), inset 0 2px 10px rgba(255,255,255,0.3);
+        }
+
+        .btn-start:hover {
+            box-shadow: 0 15px 40px rgba(0, 210, 160, 0.5), inset 0 2px 10px rgba(255,255,255,0.4);
+        }
+
+        .btn-pause {
+            background: linear-gradient(135deg, #ffb347, #ffcc33);
+            box-shadow: 0 8px 25px rgba(255, 179, 71, 0.4), inset 0 2px 10px rgba(255,255,255,0.3);
+        }
+
+        .btn-pause:hover {
+            box-shadow: 0 15px 40px rgba(255, 179, 71, 0.5), inset 0 2px 10px rgba(255,255,255,0.4);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4), inset 0 2px 10px rgba(255,255,255,0.3);
+        }
+
+        .btn-reset:hover {
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5), inset 0 2px 10px rgba(255,255,255,0.4);
+        }
+
+        /* Status Message */
+        .status-message {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 14px 30px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.98);
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+
+        .status-message.show {
+            opacity: 1;
+            visibility: visible;
+            animation: statusPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes statusPop {
+            0% { transform: translateX(-50%) scale(0.8); opacity: 0; }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+
+        /* Time's Up Overlay */
+        .timesup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .timesup-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .timesup-content {
+            text-align: center;
+            animation: timesupBounce 1.2s ease infinite;
+        }
+
+        @keyframes timesupBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .timesup-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 50px rgba(255, 158, 205, 0.6);
+        }
+
+        .timesup-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+
+        .timesup-text {
+            font-size: clamp(36px, 10vw, 48px);
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            text-shadow: 0 0 40px rgba(255, 158, 205, 0.8);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .timesup-subtext {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+        }
+
+        .timesup-btn {
+            padding: 16px 40px;
+            border-radius: 28px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 30px rgba(255, 158, 205, 0.4);
+        }
+
+        .timesup-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(255, 158, 205, 0.5);
+        }
+
+        /* Stop Ringtone Button */
+        .stop-ringtone-btn {
+            padding: 12px 30px;
+            border-radius: 22px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: transparent;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+
+        .stop-ringtone-btn:hover {
+            background: white;
+            color: var(--text-dark);
+        }
+
+        .stop-ringtone-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Confetti Canvas */
+        #confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 250;
+        }
+
+        /* Focus Mode - IMPROVED */
+        body.focus-mode .top-bar,
+        body.focus-mode .quick-times,
+        body.focus-mode .timer-input-container,
+        body.focus-mode .timer-labels,
+        body.focus-mode .timer-greeting {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        body.focus-mode .timer-container {
+            transform: scale(1.15);
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(30px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+        }
+
+        body.focus-mode .controls {
+            opacity: 0.2;
+            transition: opacity 0.3s ease;
+        }
+
+        body.focus-mode .controls:hover {
+            opacity: 1;
+        }
+
+        /* Responsive - PORTRAIT & LANDSCAPE */
+        @media (max-width: 768px) {
+            .container {
+                padding: 70px 15px 20px;
+                gap: 20px;
+            }
+
+            .timer-container {
+                padding: 25px 30px;
+                border-radius: 28px;
+            }
+
+            .timer-display {
+                letter-spacing: 3px;
+            }
+
+            .timer-labels {
+                gap: 25px;
+            }
+
+            .timer-label {
+                font-size: 10px;
+                letter-spacing: 1px;
+            }
+
+            .time-input {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+                border-radius: 18px;
+            }
+
+            .control-btn {
+                width: 65px;
+                height: 65px;
+            }
+
+            .control-btn svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .settings-panel {
+                width: 100%;
+                max-width: none;
+                padding: 20px;
+            }
+
+            .theme-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+            }
+
+            .top-bar {
+                padding: 15px;
+            }
+
+            .back-btn, .icon-btn {
+                width: 42px;
+                height: 42px;
+            }
+
+            .back-btn svg, .icon-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .timesup-icon {
+                width: 80px;
+                height: 80px;
+            }
+
+            .timesup-icon svg {
+                width: 40px;
+                height: 40px;
+            }
+
+            .quick-time-btn {
+                padding: 10px 18px;
+                font-size: 12px;
+            }
+        }
+
+        /* Landscape mode on phones */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                padding: 60px 20px 15px;
+                gap: 15px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .timer-container {
+                padding: 20px 40px;
+                order: 1;
+                width: auto;
+            }
+
+            .timer-display {
+                font-size: clamp(40px, 12vh, 80px);
+                letter-spacing: 4px;
+            }
+
+            .timer-input-container {
+                order: 2;
+                gap: 10px;
+            }
+
+            .time-input {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .quick-times {
+                order: 3;
+            }
+
+            .controls {
+                order: 4;
+                gap: 15px;
+            }
+
+            .control-btn {
+                width: 55px;
+                height: 55px;
+            }
+
+            .control-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .quick-time-btn {
+                padding: 8px 15px;
+                font-size: 11px;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 350px) {
+            .timer-container {
+                padding: 20px 25px;
+            }
+
+            .timer-display {
+                font-size: 40px;
+                letter-spacing: 2px;
+            }
+
+            .timer-labels {
+                gap: 18px;
+            }
+
+            .time-input {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .control-btn {
+                width: 55px;
+                height: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Definitions -->
+    <svg style="display: none;">
+        <defs>
+            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:var(--primary)"/>
+                <stop offset="100%" style="stop-color:var(--primary-dark)"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- Animated Background -->
+    <div class="bg-animation"></div>
+
+    <!-- Full Screen Background Image -->
+    <img class="custom-bg" id="customBg" alt="">
+    <div class="custom-bg-overlay"></div>
+
+    <!-- Floating Elements -->
+    <div class="floating-elements" id="floatingElements"></div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <!-- Back Button -->
+        <button class="back-btn" onclick="goBack()" title="Back to Main">
+            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+
+        <!-- Top Right Buttons -->
+        <div class="top-right-buttons">
+            <button class="icon-btn" id="focusModeBtn" onclick="toggleFocusMode()" title="Focus Mode">
+                <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </button>
+            <button class="icon-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Fullscreen">
+                <svg viewBox="0 0 24 24" id="fullscreenIcon"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+            </button>
+            <button class="icon-btn" onclick="openSettings()" title="Settings">
+                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Focus Mode Exit Button -->
+    <button class="focus-exit-btn" id="focusExitBtn" onclick="toggleFocusMode()" title="Exit Focus Mode">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+
+    <!-- Settings Overlay -->
+    <div class="settings-overlay" id="settingsOverlay" onclick="closeSettings()"></div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h2 class="settings-title">Settings</h2>
+            <button class="settings-close" onclick="closeSettings()">&times;</button>
+        </div>
+
+        <!-- Theme Selector -->
+        <div class="settings-section">
+            <div class="settings-section-title">Choose Theme</div>
+            <div class="theme-grid">
+                <div class="theme-option pink active" data-theme="pink" onclick="setTheme('pink')"></div>
+                <div class="theme-option lavender" data-theme="lavender" onclick="setTheme('lavender')"></div>
+                <div class="theme-option mint" data-theme="mint" onclick="setTheme('mint')"></div>
+                <div class="theme-option peach" data-theme="peach" onclick="setTheme('peach')"></div>
+                <div class="theme-option rose" data-theme="rose" onclick="setTheme('rose')"></div>
+                <div class="theme-option sky" data-theme="sky" onclick="setTheme('sky')"></div>
+                <div class="theme-option cream" data-theme="cream" onclick="setTheme('cream')"></div>
+                <div class="theme-option blush" data-theme="blush" onclick="setTheme('blush')"></div>
+            </div>
+        </div>
+
+        <!-- Clock Style Selector -->
+        <div class="settings-section">
+            <div class="settings-section-title">Clock Style</div>
+            <div class="clock-style-grid">
+                <div class="clock-style-option active" data-style="elegant" onclick="setClockStyle('elegant')">
+                    <div class="clock-style-preview elegant">12:34</div>
+                    <div class="clock-style-info">
+                        <div class="clock-style-name">Elegant</div>
+                        <div class="clock-style-desc">Classic serif beauty</div>
+                    </div>
+                </div>
+                <div class="clock-style-option" data-style="modern" onclick="setClockStyle('modern')">
+                    <div class="clock-style-preview modern">12:34</div>
+                    <div class="clock-style-info">
+                        <div class="clock-style-name">Modern</div>
+                        <div class="clock-style-desc">Clean sans-serif</div>
+                    </div>
+                </div>
+                <div class="clock-style-option" data-style="pixel" onclick="setClockStyle('pixel')">
+                    <div class="clock-style-preview pixel">12:34</div>
+                    <div class="clock-style-info">
+                        <div class="clock-style-name">Pixel</div>
+                        <div class="clock-style-desc">Retro gaming vibes</div>
+                    </div>
+                </div>
+                <div class="clock-style-option" data-style="handwritten" onclick="setClockStyle('handwritten')">
+                    <div class="clock-style-preview handwritten">12:34</div>
+                    <div class="clock-style-info">
+                        <div class="clock-style-name">Handwritten</div>
+                        <div class="clock-style-desc">Soft script style</div>
+                    </div>
+                </div>
+                <div class="clock-style-option" data-style="classic" onclick="setClockStyle('classic')">
+                    <div class="clock-style-preview classic">12:34</div>
+                    <div class="clock-style-info">
+                        <div class="clock-style-name">Classic</div>
+                        <div class="clock-style-desc">Timeless roman</div>
+                    </div>
+                </div>
+                <div class="clock-style-option" data-style="minimal" onclick="setClockStyle('minimal')">
+                    <div class="clock-style-preview minimal">12:34</div>
+                    <div class="clock-style-info">
+                        <div class="clock-style-name">Minimal</div>
+                        <div class="clock-style-desc">Monospace clean</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Image -->
+        <div class="settings-section">
+            <div class="settings-section-title">Background Image</div>
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('bgUpload').click()">
+                <div class="upload-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                </div>
+                <div class="upload-text">Click to upload an image</div>
+            </div>
+            <input type="file" class="upload-input" id="bgUpload" accept="image/*" onchange="handleBgUpload(event)">
+            
+            <div class="bg-mode-toggle" id="bgModeToggle" style="display: none;">
+                <button class="bg-mode-btn active" onclick="setBgMode('full')">Full Screen</button>
+                <button class="bg-mode-btn" onclick="setBgMode('centered')">Centered</button>
+            </div>
+            
+            <button class="remove-bg-btn" id="removeBgBtn" style="display: none;" onclick="removeBg()">Remove Image</button>
+        </div>
+
+        <!-- Ringtone Selector -->
+        <div class="settings-section">
+            <div class="settings-section-title">Ringtone</div>
+            <div class="ringtone-list">
+                <div class="ringtone-option active" data-ringtone="bell" onclick="setRingtone('bell')">
+                    <div class="ringtone-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                    </div>
+                    <div class="ringtone-info">
+                        <div class="ringtone-name">Gentle Bell</div>
+                        <div class="ringtone-preview">Soft & calming</div>
+                    </div>
+                    <button class="ringtone-play" onclick="event.stopPropagation(); previewRingtone('bell')">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                </div>
+                <div class="ringtone-option" data-ringtone="chime" onclick="setRingtone('chime')">
+                    <div class="ringtone-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                    </div>
+                    <div class="ringtone-info">
+                        <div class="ringtone-name">Crystal Chime</div>
+                        <div class="ringtone-preview">Magical & ethereal</div>
+                    </div>
+                    <button class="ringtone-play" onclick="event.stopPropagation(); previewRingtone('chime')">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                </div>
+                <div class="ringtone-option" data-ringtone="bird" onclick="setRingtone('bird')">
+                    <div class="ringtone-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    </div>
+                    <div class="ringtone-info">
+                        <div class="ringtone-name">Morning Birds</div>
+                        <div class="ringtone-preview">Nature sounds</div>
+                    </div>
+                    <button class="ringtone-play" onclick="event.stopPropagation(); previewRingtone('bird')">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                </div>
+                <div class="ringtone-option" data-ringtone="cute" onclick="setRingtone('cute')">
+                    <div class="ringtone-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </div>
+                    <div class="ringtone-info">
+                        <div class="ringtone-name">Sweet Melody</div>
+                        <div class="ringtone-preview">Playful & fun</div>
+                    </div>
+                    <button class="ringtone-play" onclick="event.stopPropagation(); previewRingtone('cute')">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                </div>
+                <div class="ringtone-option" data-ringtone="zen" onclick="setRingtone('zen')">
+                    <div class="ringtone-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    </div>
+                    <div class="ringtone-info">
+                        <div class="ringtone-name">Zen Garden</div>
+                        <div class="ringtone-preview">Peaceful & serene</div>
+                    </div>
+                    <button class="ringtone-play" onclick="event.stopPropagation(); previewRingtone('zen')">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Custom Ringtone Upload -->
+            <div class="custom-ringtone-section">
+                <div class="settings-section-title" style="margin-bottom: 10px;">Or Upload Your Own</div>
+                <div class="custom-ringtone-upload" id="customRingtoneUpload" onclick="document.getElementById('ringtoneUpload').click()">
+                    <div class="upload-icon" style="width: 38px; height: 38px; margin-bottom: 6px;">
+                        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                    </div>
+                    <div class="upload-text">Click to upload MP3/audio file</div>
+                    <div class="custom-ringtone-name" id="customRingtoneName"></div>
+                </div>
+                <input type="file" class="upload-input" id="ringtoneUpload" accept="audio/*" onchange="handleCustomRingtone(event)">
+                <button class="remove-bg-btn" id="removeRingtoneBtn" style="display: none; margin-top: 10px;" onclick="removeCustomRingtone()">Remove Custom Ringtone</button>
+            </div>
+        </div>
+
+        <!-- Volume Control -->
+        <div class="settings-section">
+            <div class="settings-section-title">Volume</div>
+            <div class="volume-control">
+                <svg class="volume-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80" oninput="setVolume(this.value)">
+                <span class="volume-value" id="volumeValue">80%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Time's Up Overlay -->
+    <div class="timesup-overlay" id="timesupOverlay">
+        <div class="timesup-content">
+            <div class="timesup-icon">
+                <svg viewBox="0 0 24 24"><path d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+            </div>
+            <div class="timesup-text">Time's Up!</div>
+            <div class="timesup-subtext">You did an amazing job focusing!</div>
+            <button class="timesup-btn" onclick="dismissTimesUp()">Great work!</button>
+            <button class="stop-ringtone-btn" onclick="stopRingtone()">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                Stop Ringtone
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Timer Display -->
+        <div class="timer-container">
+            <div class="timer-greeting" id="greeting">Ready to focus?</div>
+            <div class="timer-display" id="timerDisplay">00:00:00</div>
+            <div class="timer-labels">
+                <span class="timer-label">Hours</span>
+                <span class="timer-label">Minutes</span>
+                <span class="timer-label">Seconds</span>
+            </div>
+        </div>
+
+        <!-- Timer Input -->
+        <div class="timer-input-container" id="timerInput">
+            <div class="time-input-group">
+                <input type="number" class="time-input" id="hoursInput" min="0" max="23" value="0" placeholder="00">
+                <span class="time-input-label">Hours</span>
+            </div>
+            <div class="time-input-group">
+                <input type="number" class="time-input" id="minutesInput" min="0" max="59" value="25" placeholder="00">
+                <span class="time-input-label">Minutes</span>
+            </div>
+            <div class="time-input-group">
+                <input type="number" class="time-input" id="secondsInput" min="0" max="59" value="0" placeholder="00">
+                <span class="time-input-label">Seconds</span>
+            </div>
+        </div>
+
+        <!-- Quick Time Buttons -->
+        <div class="quick-times" id="quickTimes">
+            <button class="quick-time-btn" onclick="setQuickTime(5)">5 min</button>
+            <button class="quick-time-btn" onclick="setQuickTime(15)">15 min</button>
+            <button class="quick-time-btn pomodoro" onclick="setQuickTime(25)">Pomodoro</button>
+            <button class="quick-time-btn" onclick="setQuickTime(45)">45 min</button>
+            <button class="quick-time-btn" onclick="setQuickTime(60)">1 hour</button>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls" id="controls">
+            <button class="control-btn btn-start" id="startBtn" onclick="startTimer()" title="Start">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button class="control-btn btn-pause" id="pauseBtn" onclick="pauseTimer()" title="Pause" style="display: none;">
+                <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </button>
+            <button class="control-btn btn-reset" onclick="resetTimer()" title="Reset">
+                <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Status Message -->
+    <div class="status-message" id="statusMessage"></div>
+
+    <script>
+        // ============================================
+        // SUPABASE CONFIGURATION
+        // ============================================
+        const SUPABASE_URL = 'https://ferapozpiqskfflsbizy.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_GmR9-CM1hvtC7kxRCI_KRA_bxxv1_nl';
+        
+        let supabase;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } catch (e) {
+            console.error('Supabase init error:', e);
+        }
+
+        // ============================================
+        // STATE
+        // ============================================
+        let totalSeconds = 0;
+        let remainingSeconds = 0;
+        let timerInterval = null;
+        let isRunning = false;
+        let currentTheme = 'pink';
+        let currentClockStyle = 'elegant';
+        let currentRingtone = 'bell';
+        let volume = 0.8;
+        let audioContext = null;
+        let customBgUrl = null;
+        let customRingtoneUrl = null;
+        let customRingtoneName = null;
+        let ringtoneLoopInterval = null;
+        let isRingtonePlaying = false;
+        let isFocusMode = false;
+        let bgMode = 'full';
+
+        // Clock Style Fonts
+        const clockFonts = {
+            elegant: "'Playfair Display', serif",
+            modern: "'Montserrat', sans-serif",
+            pixel: "'Press Start 2P', cursive",
+            handwritten: "'Dancing Script', cursive",
+            classic: "'Cinzel', serif",
+            minimal: "'Space Mono', monospace"
+        };
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            createFloatingElements();
+            loadSettings();
+            updateGreeting();
+        });
+
+        function createFloatingElements() {
+            const container = document.getElementById('floatingElements');
+            const shapes = ['star', 'circle', 'heart', 'diamond'];
+            
+            for (let i = 0; i < 18; i++) {
+                const el = document.createElement('div');
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                el.className = `float-item ${shape}`;
+                el.style.left = Math.random() * 100 + '%';
+                el.style.animationDelay = Math.random() * 25 + 's';
+                el.style.animationDuration = (18 + Math.random() * 12) + 's';
+                container.appendChild(el);
+            }
+        }
+
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            const greetings = {
+                morning: 'Good morning, Aiko!',
+                afternoon: 'Good afternoon, Aiko!',
+                evening: 'Good evening, Aiko!',
+                night: 'Sweet dreams, Aiko!'
+            };
+            
+            let greeting;
+            if (hour >= 5 && hour < 12) greeting = greetings.morning;
+            else if (hour >= 12 && hour < 17) greeting = greetings.afternoon;
+            else if (hour >= 17 && hour < 22) greeting = greetings.evening;
+            else greeting = greetings.night;
+            
+            document.getElementById('greeting').textContent = greeting;
+        }
+
+        // ============================================
+        // SETTINGS FUNCTIONS
+        // ============================================
+        async function loadSettings() {
+            try {
+                const { data, error } = await supabase
+                    .from('clock_settings')
+                    .select('*')
+                    .eq('id', 1)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Error loading settings:', error);
+                    return;
+                }
+
+                if (data) {
+                    currentTheme = data.theme || 'pink';
+                    currentClockStyle = data.clock_style || 'elegant';
+                    currentRingtone = data.ringtone_name || 'bell';
+                    volume = (data.volume || 80) / 100;
+                    customBgUrl = data.background_image_url;
+                    customRingtoneUrl = data.custom_ringtone_url;
+                    bgMode = data.bg_mode || 'full';
+
+                    // Apply settings
+                    setTheme(currentTheme, false);
+                    setClockStyle(currentClockStyle, false);
+                    setRingtone(currentRingtone, false);
+                    document.getElementById('volumeSlider').value = Math.round(volume * 100);
+                    document.getElementById('volumeValue').textContent = Math.round(volume * 100) + '%';
+
+                    if (customBgUrl) {
+                        const bgImg = document.getElementById('customBg');
+                        bgImg.src = customBgUrl;
+                        bgImg.classList.add('active');
+                        document.getElementById('uploadArea').classList.add('has-image');
+                        document.getElementById('uploadArea').innerHTML = `
+                            <div class="upload-icon" style="background: #00b894;">
+                                <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: white;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <div class="upload-text">Image uploaded!</div>
+                        `;
+                        document.getElementById('removeBgBtn').style.display = 'block';
+                        document.getElementById('bgModeToggle').style.display = 'flex';
+                        updateBgModeUI();
+                    }
+
+                    if (customRingtoneUrl) {
+                        document.getElementById('customRingtoneUpload').classList.add('has-file');
+                        document.getElementById('customRingtoneName').textContent = 'Custom ringtone loaded';
+                        document.getElementById('removeRingtoneBtn').style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        }
+
+        async function saveSettings() {
+            try {
+                await supabase
+                    .from('clock_settings')
+                    .upsert({
+                        id: 1,
+                        theme: currentTheme,
+                        clock_style: currentClockStyle,
+                        background_image_url: customBgUrl,
+                        bg_mode: bgMode,
+                        ringtone_name: currentRingtone,
+                        custom_ringtone_url: customRingtoneUrl,
+                        volume: Math.round(volume * 100),
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'id' });
+            } catch (error) {
+                console.error('Error saving settings:', error);
+            }
+        }
+
+        function openSettings() {
+            document.getElementById('settingsPanel').classList.add('active');
+            document.getElementById('settingsOverlay').classList.add('active');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsPanel').classList.remove('active');
+            document.getElementById('settingsOverlay').classList.remove('active');
+            saveSettings();
+        }
+
+        // ============================================
+        // THEME FUNCTIONS
+        // ============================================
+        function setTheme(theme, save = true) {
+            currentTheme = theme;
+            document.body.className = document.body.className.replace(/theme-\w+/, '') + ' theme-' + theme;
+            
+            document.querySelectorAll('.theme-option').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`.theme-option[data-theme="${theme}"]`).classList.add('active');
+            
+            if (save) saveSettings();
+        }
+
+        // ============================================
+        // CLOCK STYLE FUNCTIONS
+        // ============================================
+        function setClockStyle(style, save = true) {
+            currentClockStyle = style;
+            document.documentElement.style.setProperty('--clock-font', clockFonts[style]);
+            
+            document.querySelectorAll('.clock-style-option').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`.clock-style-option[data-style="${style}"]`).classList.add('active');
+            
+            if (save) {
+                saveSettings();
+                showStatus('Clock style updated!');
+            }
+        }
+
+        // ============================================
+        // BACKGROUND IMAGE FUNCTIONS
+        // ============================================
+        async function handleBgUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            try {
+                showStatus('Uploading image...');
+                
+                const fileExt = file.name.split('.').pop();
+                const fileName = `bg_${Date.now()}.${fileExt}`;
+                
+                const { data, error } = await supabase.storage
+                    .from('clock-assets')
+                    .upload(fileName, file);
+
+                if (error) throw error;
+
+                const { data: { publicUrl } } = supabase.storage
+                    .from('clock-assets')
+                    .getPublicUrl(fileName);
+
+                customBgUrl = publicUrl;
+                const bgImg = document.getElementById('customBg');
+                bgImg.src = customBgUrl;
+                bgImg.classList.add('active');
+                
+                document.getElementById('uploadArea').classList.add('has-image');
+                document.getElementById('uploadArea').innerHTML = `
+                    <div class="upload-icon" style="background: #00b894;">
+                        <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: white;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div class="upload-text">Image uploaded!</div>
+                `;
+                document.getElementById('removeBgBtn').style.display = 'block';
+                document.getElementById('bgModeToggle').style.display = 'flex';
+                updateBgModeUI();
+                
+                showStatus('Image uploaded successfully!');
+                saveSettings();
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                showStatus('Upload failed');
+            }
+        }
+
+        function setBgMode(mode) {
+            bgMode = mode;
+            updateBgModeUI();
+            
+            const bgImg = document.getElementById('customBg');
+            if (mode === 'full') {
+                bgImg.style.objectFit = 'cover';
+                bgImg.style.opacity = '0.85';
+            } else {
+                bgImg.style.objectFit = 'contain';
+                bgImg.style.opacity = '0.6';
+            }
+            saveSettings();
+        }
+
+        function updateBgModeUI() {
+            document.querySelectorAll('.bg-mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.bg-mode-btn[onclick="setBgMode('${bgMode}')"]`).classList.add('active');
+        }
+
+        async function removeBg() {
+            customBgUrl = null;
+            const bgImg = document.getElementById('customBg');
+            bgImg.classList.remove('active');
+            bgImg.src = '';
+            
+            document.getElementById('uploadArea').classList.remove('has-image');
+            document.getElementById('uploadArea').innerHTML = `
+                <div class="upload-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                </div>
+                <div class="upload-text">Click to upload an image</div>
+            `;
+            document.getElementById('removeBgBtn').style.display = 'none';
+            document.getElementById('bgModeToggle').style.display = 'none';
+            document.getElementById('bgUpload').value = '';
+            
+            showStatus('Image removed');
+            saveSettings();
+        }
+
+        // ============================================
+        // FOCUS MODE & FULLSCREEN
+        // ============================================
+        function toggleFocusMode() {
+            isFocusMode = !isFocusMode;
+            document.body.classList.toggle('focus-mode', isFocusMode);
+            document.getElementById('focusModeBtn').classList.toggle('active', isFocusMode);
+            document.getElementById('focusExitBtn').classList.toggle('show', isFocusMode);
+            showStatus(isFocusMode ? 'Focus mode enabled' : 'Focus mode disabled');
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error('Fullscreen error:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            const icon = document.getElementById('fullscreenIcon');
+            if (document.fullscreenElement) {
+                icon.innerHTML = '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm12 7h-3v2h5v-5h-2v3zm2-11V5h-2v5h5V8h-3z"/>';
+            } else {
+                icon.innerHTML = '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
+            }
+        });
+
+        // ============================================
+        // RINGTONE FUNCTIONS
+        // ============================================
+        function setRingtone(ringtone, save = true) {
+            currentRingtone = ringtone;
+            
+            document.querySelectorAll('.ringtone-option').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`.ringtone-option[data-ringtone="${ringtone}"]`).classList.add('active');
+            
+            if (save) saveSettings();
+        }
+
+        function previewRingtone(ringtone) {
+            playRingtone(ringtone, true);
+        }
+
+        function playRingtone(ringtone = currentRingtone, isPreview = false) {
+            stopRingtone();
+            
+            if (ringtone === 'custom' && customRingtoneUrl) {
+                playCustomRingtone(isPreview);
+                return;
+            }
+
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            isRingtonePlaying = true;
+            playTone(ringtone, isPreview);
+            
+            if (!isPreview) {
+                ringtoneLoopInterval = setInterval(() => {
+                    if (isRingtonePlaying) {
+                        playTone(ringtone, false);
+                    }
+                }, 2000);
+            }
+        }
+
+        function playTone(ringtone, isPreview) {
+            if (!audioContext) return;
+            
+            const now = audioContext.currentTime;
+            const osc = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            osc.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            const previewVolume = isPreview ? volume * 0.5 : volume;
+            gainNode.gain.setValueAtTime(previewVolume, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
+
+            switch(ringtone) {
+                case 'bell':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.exponentialRampToValueAtTime(1046.5, now + 0.5);
+                    break;
+                case 'chime':
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(880, now);
+                    osc.frequency.exponentialRampToValueAtTime(1760, now + 1);
+                    break;
+                case 'bird':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(2000, now);
+                    osc.frequency.linearRampToValueAtTime(2500, now + 0.1);
+                    osc.frequency.linearRampToValueAtTime(2000, now + 0.2);
+                    break;
+                case 'cute':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(659.25, now);
+                    setTimeout(() => {
+                        if (isRingtonePlaying) osc.frequency.setValueAtTime(783.99, now + 0.2);
+                    }, 200);
+                    setTimeout(() => {
+                        if (isRingtonePlaying) osc.frequency.setValueAtTime(1046.50, now + 0.4);
+                    }, 400);
+                    break;
+                case 'zen':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(432, now);
+                    gainNode.gain.setValueAtTime(previewVolume * 0.3, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 3);
+                    break;
+            }
+
+            osc.start(now);
+            osc.stop(now + (isPreview ? 1.5 : 2));
+        }
+
+        function playCustomRingtone(isPreview) {
+            if (!customRingtoneUrl) return;
+            
+            const audio = new Audio(customRingtoneUrl);
+            audio.volume = isPreview ? volume * 0.5 : volume;
+            audio.loop = !isPreview;
+            
+            audio.play().catch(error => {
+                console.error('Error playing custom ringtone:', error);
+            });
+            
+            window.currentRingtoneAudio = audio;
+        }
+
+        function stopRingtone() {
+            isRingtonePlaying = false;
+            
+            if (ringtoneLoopInterval) {
+                clearInterval(ringtoneLoopInterval);
+                ringtoneLoopInterval = null;
+            }
+            
+            if (window.currentRingtoneAudio) {
+                window.currentRingtoneAudio.pause();
+                window.currentRingtoneAudio.currentTime = 0;
+                window.currentRingtoneAudio = null;
+            }
+        }
+
+        function setVolume(val) {
+            volume = val / 100;
+            document.getElementById('volumeValue').textContent = val + '%';
+        }
+
+        // ============================================
+        // CUSTOM RINGTONE UPLOAD
+        // ============================================
+        async function handleCustomRingtone(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            try {
+                showStatus('Uploading ringtone...');
+                
+                const fileExt = file.name.split('.').pop();
+                const fileName = `ringtone_${Date.now()}.${fileExt}`;
+                
+                const { data, error } = await supabase.storage
+                    .from('clock-assets')
+                    .upload(fileName, file);
+
+                if (error) throw error;
+
+                const { data: { publicUrl } } = supabase.storage
+                    .from('clock-assets')
+                    .getPublicUrl(fileName);
+
+                customRingtoneUrl = publicUrl;
+                customRingtoneName = file.name;
+                
+                document.getElementById('customRingtoneUpload').classList.add('has-file');
+                document.getElementById('customRingtoneName').textContent = file.name;
+                document.getElementById('removeRingtoneBtn').style.display = 'block';
+                
+                setRingtone('custom');
+                
+                showStatus('Ringtone uploaded!');
+                saveSettings();
+            } catch (error) {
+                console.error('Error uploading ringtone:', error);
+                showStatus('Upload failed');
+            }
+        }
+
+        async function removeCustomRingtone() {
+            customRingtoneUrl = null;
+            customRingtoneName = null;
+            
+            document.getElementById('customRingtoneUpload').classList.remove('has-file');
+            document.getElementById('customRingtoneName').textContent = '';
+            document.getElementById('removeRingtoneBtn').style.display = 'none';
+            document.getElementById('ringtoneUpload').value = '';
+            
+            setRingtone('bell');
+            
+            showStatus('Custom ringtone removed');
+            saveSettings();
+        }
+
+        // ============================================
+        // TIMER FUNCTIONS
+        // ============================================
+        function setQuickTime(minutes) {
+            document.getElementById('hoursInput').value = 0;
+            document.getElementById('minutesInput').value = minutes;
+            document.getElementById('secondsInput').value = 0;
+            showStatus(`${minutes} minutes set!`);
+        }
+
+        function getInputSeconds() {
+            const hours = parseInt(document.getElementById('hoursInput').value) || 0;
+            const minutes = parseInt(document.getElementById('minutesInput').value) || 0;
+            const seconds = parseInt(document.getElementById('secondsInput').value) || 0;
+            return hours * 3600 + minutes * 60 + seconds;
+        }
+
+        function formatTime(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        async function startTimer() {
+            if (!isRunning) {
+                if (remainingSeconds === 0) {
+                    totalSeconds = getInputSeconds();
+                    remainingSeconds = totalSeconds;
+                }
+                
+                if (remainingSeconds <= 0) {
+                    showStatus('Please set a time first!');
+                    return;
+                }
+
+                isRunning = true;
+                document.getElementById('startBtn').style.display = 'none';
+                document.getElementById('pauseBtn').style.display = 'flex';
+                document.getElementById('timerInput').style.display = 'none';
+                document.getElementById('quickTimes').style.display = 'none';
+                document.getElementById('timerDisplay').classList.add('running');
+                document.getElementById('greeting').textContent = 'Focusing...';
+
+                const endTime = new Date();
+                endTime.setSeconds(endTime.getSeconds() + remainingSeconds);
+                
+                try {
+                    await supabase
+                        .from('clock_state')
+                        .upsert({
+                            id: 1,
+                            end_time: endTime.toISOString(),
+                            is_running: true,
+                            updated_at: new Date().toISOString()
+                        }, { onConflict: 'id' });
+                } catch (error) {
+                    console.error('Error saving clock state:', error);
+                }
+
+                updateDisplay();
+                timerInterval = setInterval(() => {
+                    remainingSeconds--;
+                    updateDisplay();
+                    
+                    if (remainingSeconds <= 0) {
+                        finishTimer();
+                    }
+                }, 1000);
+            }
+        }
+
+        async function pauseTimer() {
+            if (isRunning) {
+                isRunning = false;
+                clearInterval(timerInterval);
+                document.getElementById('startBtn').style.display = 'flex';
+                document.getElementById('pauseBtn').style.display = 'none';
+                document.getElementById('timerDisplay').classList.remove('running');
+                document.getElementById('greeting').textContent = 'Paused';
+
+                try {
+                    await supabase
+                        .from('clock_state')
+                        .upsert({
+                            id: 1,
+                            is_running: false,
+                            updated_at: new Date().toISOString()
+                        }, { onConflict: 'id' });
+                } catch (error) {
+                    console.error('Error saving clock state:', error);
+                }
+            }
+        }
+
+        async function resetTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            remainingSeconds = 0;
+            
+            document.getElementById('startBtn').style.display = 'flex';
+            document.getElementById('pauseBtn').style.display = 'none';
+            document.getElementById('timerInput').style.display = 'flex';
+            document.getElementById('quickTimes').style.display = 'flex';
+            document.getElementById('timerDisplay').classList.remove('running', 'finished');
+            document.getElementById('timerDisplay').textContent = '00:00:00';
+            updateGreeting();
+
+            try {
+                await supabase
+                    .from('clock_state')
+                    .upsert({
+                        id: 1,
+                        is_running: false,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'id' });
+            } catch (error) {
+                console.error('Error saving clock state:', error);
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById('timerDisplay').textContent = formatTime(remainingSeconds);
+        }
+
+        async function finishTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            
+            document.getElementById('timerDisplay').classList.remove('running');
+            document.getElementById('timerDisplay').classList.add('finished');
+            document.getElementById('greeting').textContent = 'Time is up!';
+            
+            playRingtone();
+            document.getElementById('timesupOverlay').classList.add('active');
+            startConfetti();
+
+            try {
+                await supabase
+                    .from('clock_state')
+                    .upsert({
+                        id: 1,
+                        is_running: false,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'id' });
+            } catch (error) {
+                console.error('Error saving clock state:', error);
+            }
+        }
+
+        function dismissTimesUp() {
+            stopRingtone();
+            document.getElementById('timesupOverlay').classList.remove('active');
+            stopConfetti();
+            resetTimer();
+        }
+
+        // ============================================
+        // CONFETTI EFFECT
+        // ============================================
+        let confettiActive = false;
+        let confettiAnimationId = null;
+
+        function startConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const particles = [];
+            const colors = ['#ff9ecd', '#a8d8ea', '#ffd93d', '#ffb7d5', '#c8b6ff', '#a7f3d0', '#fdba74', '#fda4af'];
+            
+            for (let i = 0; i < 120; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 12 + 6,
+                    speedY: Math.random() * 4 + 2,
+                    speedX: Math.random() * 3 - 1.5,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 5 - 2.5,
+                    shape: Math.random() > 0.5 ? 'square' : 'circle'
+                });
+            }
+            
+            confettiActive = true;
+            
+            function animate() {
+                if (!confettiActive) return;
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rotation += p.rotationSpeed;
+                    
+                    if (p.y > canvas.height) {
+                        p.y = -20;
+                        p.x = Math.random() * canvas.width;
+                    }
+                    
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    
+                    if (p.shape === 'circle') {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else {
+                        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    }
+                    
+                    ctx.restore();
+                });
+                
+                confettiAnimationId = requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        function stopConfetti() {
+            confettiActive = false;
+            if (confettiAnimationId) {
+                cancelAnimationFrame(confettiAnimationId);
+            }
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function showStatus(message) {
+            const status = document.getElementById('statusMessage');
+            status.textContent = message;
+            status.classList.add('show');
+            
+            setTimeout(() => {
+                status.classList.remove('show');
+            }, 2500);
+        }
+
+        function goBack() {
+            window.close();
+            window.location.href = 'index.html';
+        }
+
+        // Handle window resize for confetti
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('confettiCanvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
